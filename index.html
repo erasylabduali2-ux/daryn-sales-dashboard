@@ -1,1 +1,262 @@
 
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DARYN | Sales League</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}
+header{padding:25px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #263044}
+.logo{font-size:25px;font-weight:900;color:#f2c66d;letter-spacing:2px}
+button{border:0;border-radius:9px;padding:11px 17px;background:#e6b957;color:#101521;font-weight:bold;cursor:pointer}
+button.secondary{background:#273349;color:white}
+button.danger{background:#a93636;color:white}
+.container{max-width:1150px;margin:auto;padding:25px 5%}
+.hero{text-align:center;padding:30px 0}
+.hero h1{font-size:clamp(32px,6vw,55px);margin:5px;color:#f3ca76;letter-spacing:3px}
+.sub{color:#8995aa;letter-spacing:3px;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:25px 0}
+.stat,.panel,.manager{background:linear-gradient(145deg,#172238,#101827);border:1px solid #29364c;border-radius:16px;padding:19px}
+.stat small,.muted{color:#94a1b7;font-size:12px}
+.stat strong{display:block;font-size:clamp(18px,3vw,27px);color:#f3ca76;margin-top:9px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:30px 0 15px}
+.section-title h2{font-size:19px;letter-spacing:1px}
+.top-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.manager{text-align:center;position:relative}
+.manager.first{border-color:#cda64e;background:linear-gradient(145deg,#3a301e,#151c2a)}
+.avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#34415a;border:2px solid #d7b35d;margin:8px auto}
+.rank{color:#f2c66d;font-size:23px;font-weight:900}
+.manager h3{margin:8px 0}
+.amount{font-size:21px;font-weight:bold;color:#f2c66d;margin:10px 0}
+.progress{height:9px;background:#344056;border-radius:20px;overflow:hidden;margin:10px 0}
+.progress div{height:100%;background:linear-gradient(90deg,#a77a2f,#f6d17b);border-radius:20px}
+.details{display:flex;justify-content:space-between;color:#9caac0;font-size:12px;margin-top:8px}
+.ranking{display:flex;flex-direction:column;gap:10px}
+.rank-row{display:flex;align-items:center;gap:13px;background:#131e30;border:1px solid #27344a;border-radius:13px;padding:13px}
+.rank-row .avatar{width:49px;height:49px;margin:0}
+.rank-row .info{flex:1;min-width:0}
+.rank-row h3{font-size:14px;margin:0 0 5px}
+.rank-row .amount{font-size:15px;margin:0}
+.admin{margin-top:30px}
+input{width:100%;padding:12px;margin:6px 0 13px;background:#0c1422;border:1px solid #35435a;border-radius:8px;color:white}
+label{font-size:12px;color:#aab5c8}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.hidden{display:none}
+footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
+#notice{color:#f2c66d;font-size:13px;margin:10px 0}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:span 2}.form-grid{grid-template-columns:1fr}.container{padding:18px 4%}}
+@media print{button,.admin{display:none}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">DARYN.</div>
+ <div class="actions">
+  <button class="secondary" onclick="tvMode()">TV MODE</button>
+  <button class="secondary" onclick="login()">РОП КІРУ</button>
+ </div>
+</header>
+
+<main class="container">
+ <div class="hero">
+  <div class="sub">DARYN ONLINE • SALES DEPARTMENT</div>
+  <h1>SALES LEAGUE</h1>
+  <div class="sub">THE BEST TEAM. THE BIGGEST RESULTS.</div>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><small>ЖАЛПЫ САТЫЛЫМ</small><strong id="totalSales">0 ₸</strong></div>
+  <div class="stat"><small>ЖАЛПЫ ЧЕК</small><strong id="totalChecks">0</strong></div>
+  <div class="stat"><small>КОМАНДА ЖОСПАРЫ</small><strong id="totalPercent">0%</strong></div>
+ </div>
+
+ <div class="section-title">
+  <h2>🏆 TOP 5 MANAGERS</h2>
+  <span class="muted">ҮЗДІКТЕР</span>
+ </div>
+ <div class="top-grid" id="topFive"></div>
+
+ <div class="section-title">
+  <h2>📊 ТОЛЫҚ РЕЙТИНГ</h2>
+  <span class="muted" id="managerCount">0 менеджер</span>
+ </div>
+ <div class="ranking" id="ranking"></div>
+
+ <section class="panel admin hidden" id="adminPanel">
+  <div class="section-title">
+   <h2>⚙️ РОП БАСҚАРУ ПАНЕЛІ</h2>
+   <button class="secondary" onclick="logout()">Шығу</button>
+  </div>
+  <div id="notice"></div>
+  <h3 id="formTitle">Менеджер қосу</h3>
+  <form id="managerForm">
+   <input type="hidden" id="managerId">
+   <label>Менеджер аты</label>
+   <input id="name" required placeholder="Мысалы: Айдос">
+   <label>Фото URL</label>
+   <input id="photo" placeholder="Фото сілтемесі">
+   <div class="form-grid">
+    <div><label>Жоспар (₸)</label><input id="plan" type="number" min="0" required></div>
+    <div><label>Сатылым (₸)</label><input id="sales" type="number" min="0" required></div>
+   </div>
+   <label>Чек саны</label>
+   <input id="checks" type="number" min="0" required>
+   <div class="actions">
+    <button type="submit">Сақтау</button>
+    <button type="button" class="secondary" onclick="resetForm()">Тазалау</button>
+   </div>
+  </form>
+  <div class="section-title"><h3>Менеджерлерді басқару</h3></div>
+  <div id="editList"></div>
+ </section>
+</main>
+
+<footer>DARYN ONLINE • SALES LEAGUE • 2026</footer>
+
+<script>
+const SUPABASE_URL = "https://bvydfvsmglnnezkodsgz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00";
+
+const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let managers=[];
+let isROP=false;
+
+const money=n=>new Intl.NumberFormat("kk-KZ").format(Number(n)||0)+" ₸";
+const pct=(s,p)=>p>0?Math.round(s/p*100):0;
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
+
+async function load(){
+ const {data,error}=await db.from("managers").select("*").order("sales",{ascending:false});
+ if(error){document.getElementById("notice").textContent=error.message;return}
+ managers=data||[];
+ render();
+}
+
+function render(){
+ const sorted=[...managers].sort((a,b)=>Number(b.sales)-Number(a.sales));
+ const sales=sorted.reduce((a,m)=>a+Number(m.sales||0),0);
+ const checks=sorted.reduce((a,m)=>a+Number(m.checks||0),0);
+ const plans=sorted.reduce((a,m)=>a+Number(m.plan||0),0);
+ document.getElementById("totalSales").textContent=money(sales);
+ document.getElementById("totalChecks").textContent=checks;
+ document.getElementById("totalPercent").textContent=pct(sales,plans)+"%";
+ document.getElementById("managerCount").textContent=sorted.length+" менеджер";
+
+ document.getElementById("topFive").innerHTML=sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
+ document.getElementById("ranking").innerHTML=sorted.map((m,i)=>card(m,i,false)).join("")||'<div class="panel muted">Әзірге менеджерлер қосылмаған.</div>';
+
+ document.getElementById("editList").innerHTML=isROP?sorted.map(m=>`
+ <div class="rank-row">
+ <div class="info"><h3>${safe(m.name)}</h3><span class="muted">${money(m.sales)}</span></div>
+ <button class="secondary" onclick="editManager(${m.id})">Өңдеу</button>
+ <button class="danger" onclick="deleteManager(${m.id})">Жою</button>
+ </div>`).join(""):"";
+}
+
+function card(m,i,top){
+ const p=pct(Number(m.sales||0),Number(m.plan||0));
+ return `<div class="${top?'manager '+(i===0?'first':''):'rank-row'}">
+ <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
+ <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
+ <div class="${top?'':'info'}">
+ <h3>${safe(m.name)}</h3>
+ <div class="amount">${money(m.sales)}</div>
+ <div class="muted">${Number(m.checks||0)} чек</div>
+ </div>
+ <div style="${top?'':'min-width:100px;text-align:right'}">
+ <strong style="color:#f2c66d">${p}%</strong>
+ <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
+ <div class="details"><span>${top?'':'Жоспар'}</span><span>${money(m.plan)}</span></div>
+ <div class="details"><span>Қалды</span><span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span></div>
+ </div>
+ </div>`;
+}
+
+async function login(){
+ const email=prompt("РОП email:");
+ if(!email)return;
+ const password=prompt("Құпиясөз:");
+ if(!password)return;
+ const {error}=await db.auth.signInWithPassword({email,password});
+ if(error){alert(error.message);return}
+ await checkROP();
+}
+
+async function checkROP(){
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){isROP=false;return}
+ const {data,error}=await db.from("rop_users").select("user_id").eq("user_id",user.id).maybeSingle();
+ isROP=!!data&&!error;
+ document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
+ if(!isROP)alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
+ render();
+}
+
+async function logout(){
+ await db.auth.signOut();
+ isROP=false;
+ document.getElementById("adminPanel").classList.add("hidden");
+ render();
+}
+
+function resetForm(){
+ document.getElementById("managerForm").reset();
+ document.getElementById("managerId").value="";
+ document.getElementById("formTitle").textContent="Менеджер қосу";
+}
+
+document.getElementById("managerForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!isROP)return alert("Рұқсат жоқ");
+ const id=document.getElementById("managerId").value;
+ const item={
+ name:document.getElementById("name").value.trim(),
+ photo_url:document.getElementById("photo").value.trim()||null,
+ plan:Number(document.getElementById("plan").value),
+ sales:Number(document.getElementById("sales").value),
+ checks:Number(document.getElementById("checks").value)
+ };
+ const result=id
+ ?await db.from("managers").update(item).eq("id",id)
+ :await db.from("managers").insert(item);
+ if(result.error){alert(result.error.message);return}
+ resetForm();await load();
+});
+
+function editManager(id){
+ const m=managers.find(x=>String(x.id)===String(id));
+ if(!m)return;
+ document.getElementById("managerId").value=m.id;
+ document.getElementById("name").value=m.name;
+ document.getElementById("photo").value=m.photo_url||"";
+ document.getElementById("plan").value=m.plan;
+ document.getElementById("sales").value=m.sales;
+ document.getElementById("checks").value=m.checks;
+ document.getElementById("formTitle").textContent="Менеджерді өңдеу";
+ document.getElementById("managerForm").scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteManager(id){
+ if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
+ const {error}=await db.from("managers").delete().eq("id",id);
+ if(error)alert(error.message);else await load();
+}
+
+function tvMode(){
+ document.body.classList.toggle("tv");
+ document.querySelectorAll(".admin,header button").forEach(x=>x.style.display=document.body.classList.contains("tv")?"none":"");
+ document.querySelector(".hero").scrollIntoView();
+}
+
+db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
+load();
+</script>
+</body>
+</html>
+
+
