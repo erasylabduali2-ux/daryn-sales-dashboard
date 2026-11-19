@@ -1,0 +1,19 @@
+
+{
+  "name": "DARYN SALES LEAGUE",
+  "short_name": "DARYN",
+  "description": "Daryn Online Sales Dashboard",
+  "start_url": "/daryn-sales-dashboard/",
+  "scope": "/daryn-sales-dashboard/",
+  "display": "standalone",
+  "background_color": "#080d18",
+  "theme_color": "#080d18",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
