@@ -87,6 +87,27 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .wheel-label.medium{width:58px;font-size:11px}
 .wheel-label.small{width:30px;font-size:13px}
 .wheel-label.tiny{width:20px;font-size:12px}
+
+/* ЕКІНШІ ФОРТУНА: ЖАЗУЛАРДЫ СЕКТОРҒА СЫЙҒЫЗУ */
+#checkWheelDisc .wheel-label{
+ white-space:normal!important;
+ overflow-wrap:anywhere;
+ word-break:normal;
+ line-height:1.05;
+ padding:2px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+}
+#checkWheelDisc .wheel-label span{
+ display:block;
+ width:100%;
+ text-align:center;
+ white-space:normal;
+ overflow-wrap:anywhere;
+}
+
 .wheel-hub{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,#fff0a8,#b78325);border:5px solid #49330d;display:flex;align-items:center;justify-content:center;color:#231807;font-weight:1000;font-size:15px;box-shadow:0 0 15px #0009}
 .wheel-controls{width:100%;max-width:420px}
 .wheel-controls button{width:100%;padding:15px;font-size:16px;letter-spacing:1px}
@@ -180,7 +201,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
   <div class="dynamics-status" id="dynamicsStatus">Динамика жүктелуде...</div>
  </section>
 
- <!-- 1-ДӨҢГЕЛЕК: ӘР 1 МЛН ₸ САТЫЛЫМҒА 1 АЙНАЛЫМ -->
  <section class="fortune-panel" id="fortunePanel">
   <h2 class="fortune-heading">🎡 DARYN SALES — FORTUNE WHEEL</h2>
   <div class="fortune-sub">ӘР 1 000 000 ₸ САТЫЛЫМҒА — 1 МҮМКІНДІК</div>
@@ -219,7 +239,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
   </div>
  </section>
 
- <!-- 2-ДӨҢГЕЛЕК: ӘР ЧЕККЕ 1 АЙНАЛЫМ -->
  <section class="fortune-panel" id="checkFortunePanel">
   <h2 class="fortune-heading">🎁 DARYN CHECK — BONUS WHEEL</h2>
   <div class="fortune-sub">ӘР 1 ЧЕККЕ — 1 АЙНАЛЫМ • 15 СЫЙЛЫҚ</div>
@@ -464,23 +483,72 @@ function renderPrizeList(){
  document.getElementById("prizeList").innerHTML=PRIZES.map((p,i)=>`<div class="prize-item"><span>${safe(PRIZE_LIST_LABELS[i])}</span>${isROP?`<b>${p.probability}%</b>`:""}</div>`).join("");
 }
 
-/* SECOND WHEEL LABELS */
+/* SECOND WHEEL LABELS — UPDATED */
 function renderCheckWheelLabels(){
- const disc=document.getElementById("checkWheelDisc");if(!disc)return;
- const size=disc.clientWidth;if(size<50){requestAnimationFrame(renderCheckWheelLabels);return;}
- const center=size/2,gradient=[];disc.innerHTML="";
+ const disc=document.getElementById("checkWheelDisc");
+ if(!disc)return;
+
+ const size=disc.clientWidth;
+ if(size<50){
+  requestAnimationFrame(renderCheckWheelLabels);
+  return;
+ }
+
+ const center=size/2;
+ const gradient=[];
+ disc.innerHTML="";
+
  CHECK_PRIZES.forEach((prize,i)=>{
-  const start=i*(100/15),end=(i+1)*(100/15);
+  const start=i*(100/15);
+  const end=(i+1)*(100/15);
+
   gradient.push(`${CHECK_COLORS[i]} ${start}% ${end}%`);
-  const angleDeg=(i+.5)*24-90,angleRad=angleDeg*Math.PI/180,radius=size*.365;
-  const x=center+Math.cos(angleRad)*radius,y=center+Math.sin(angleRad)*radius;
-  const label=document.createElement("div");label.className="wheel-label";
-  label.style.width="43px";label.style.fontSize="9px";label.style.left=x+"px";label.style.top=y+"px";
-  label.style.transform=`translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
-  label.innerHTML=`<span>${safe(prize.wheel)}</span>`;disc.appendChild(label);
+
+  // Әр сектордың дәл ортасы
+  const angleDeg=(i+.5)*24-90;
+  const angleRad=angleDeg*Math.PI/180;
+
+  // Жазуды сектор ортасына жақын орналастыру
+  const radius=size*.345;
+
+  const x=center+Math.cos(angleRad)*radius;
+  const y=center+Math.sin(angleRad)*radius;
+
+  const label=document.createElement("div");
+  label.className="wheel-label";
+
+  // Экран өлшеміне қарай жазу өлшемі
+  const labelWidth=Math.min(49,Math.max(36,size*.125));
+  const fontSize=Math.min(9,Math.max(7.5,size*.022));
+
+  label.style.width=labelWidth+"px";
+  label.style.maxWidth=labelWidth+"px";
+  label.style.fontSize=fontSize+"px";
+  label.style.minHeight="22px";
+  label.style.height="auto";
+
+  label.style.left=x+"px";
+  label.style.top=y+"px";
+
+  // Сектор бағытымен бұру
+  label.style.transform=
+   `translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
+
+  label.style.whiteSpace="normal";
+  label.style.overflowWrap="anywhere";
+  label.style.wordBreak="normal";
+  label.style.lineHeight="1.05";
+  label.style.textAlign="center";
+  label.style.padding="2px";
+
+  label.innerHTML=`<span>${safe(prize.wheel)}</span>`;
+  disc.appendChild(label);
  });
- disc.style.background=`conic-gradient(from -90deg,${gradient.join(",")})`;
+
+ disc.style.background=
+  `conic-gradient(from -90deg,${gradient.join(",")})`;
 }
+
 function renderCheckPrizeList(){
  const list=document.getElementById("checkPrizeList");
  list.innerHTML=CHECK_PRIZES.map(p=>`<div class="prize-item"><span>${safe(p.label)}</span>${isROP?`<b>6.67%</b>`:""}</div>`).join("");
