@@ -7,7 +7,7 @@
 <title>Daryn Sales</title>
 <link rel="icon" type="image/png" href="/logo.png?v=20261119">
 <link rel="apple-touch-icon" href="/logo.png?v=20261119">
-  
+
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#080d18">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,6 +61,12 @@ label{font-size:12px;color:#aab5c8}
 .hidden{display:none!important}
 footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 #notice{color:#f2c66d;font-size:13px;margin:10px 0}
+.approval-request-btn{background:#263e5c!important;color:#fff!important;margin:9px 0 3px;border:1px solid #53749b}
+.approval-note{font-size:12px;color:#aebdd2;line-height:1.6;margin:7px 0 12px}
+.approval-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;margin:10px 0;background:#101b2c;border:1px solid #34465e;border-radius:12px;flex-wrap:wrap}
+.approval-row strong{color:#f2c66d}
+.approval-row .actions button{padding:9px 12px}
+.approval-status{font-size:12px;color:#aebdd2;margin-top:5px}
 
 .leader-crown{display:block;font-size:38px;line-height:1;margin-bottom:7px;filter:drop-shadow(0 0 8px #ffd34e);animation:crownFloat 1.8s ease-in-out infinite}
 .manager.first .leader-crown{font-size:45px}
@@ -282,6 +288,17 @@ header button{padding:9px 11px;font-size:11px}
         <input id="fortunePin" type="password" inputmode="numeric"
                maxlength="4" placeholder="••••" autocomplete="off">
 
+        <button type="button" class="approval-request-btn"
+                id="requestMillionButton"
+                onclick="requestFortuneApproval('million')">
+          🔐 РҰҚСАТ СҰРАУ
+        </button>
+
+        <div class="approval-note">
+          Алдымен РОП рұқсатын сұра.
+          Мақұлдаған соң «Айналдыру» батырмасын бас.
+        </div>
+
         <button id="spinButton" onclick="spinFortune()" disabled>
           🎡 АЙНАЛДЫРУ
         </button>
@@ -352,6 +369,17 @@ header button{padding:9px 11px;font-size:11px}
         <input id="checkFortunePin" type="password" inputmode="numeric"
                maxlength="4" placeholder="••••" autocomplete="off">
 
+        <button type="button" class="approval-request-btn"
+                id="requestCheckButton"
+                onclick="requestFortuneApproval('check')">
+          🔐 РҰҚСАТ СҰРАУ
+        </button>
+
+        <div class="approval-note">
+          Алдымен РОП рұқсатын сұра.
+          Мақұлдаған соң «Айналдыру» батырмасын бас.
+        </div>
+
         <button id="spinCheckButton" onclick="spinCheckFortune()" disabled>
           🎁 АЙНАЛДЫРУ
         </button>
@@ -407,6 +435,23 @@ header button{padding:9px 11px;font-size:11px}
   </div>
 
   <div id="notice"></div>
+
+  <div class="panel" style="margin:15px 0 25px;background:#0c1524">
+    <div class="section-title" style="margin:0 0 10px">
+      <h3>
+        🔐 ФОРТУНА РҰҚСАТТАРЫ
+        <span id="approvalCount" class="muted"></span>
+      </h3>
+      <button type="button" class="secondary"
+              onclick="loadApprovalRequests()">
+        ↻ ЖАҢАРТУ
+      </button>
+    </div>
+    <div id="approvalRequests">
+      <div class="muted">Өтінімдер жүктелуде...</div>
+    </div>
+  </div>
+
   <h3 id="formTitle">Менеджер қосу</h3>
 
   <form id="managerForm">
@@ -490,6 +535,8 @@ let previousLeaderId=null;
 let hasLoadedOnce=false;
 let wheelBusy=false;
 let checkWheelBusy=false;
+let approvalRequestBusy={million:false,check:false};
+let approvalReviewBusy=false;
 let fortuneUsedByManager={};
 let fortuneHistoryRows=[];
 let checkFortuneUsedByManager={};
@@ -1034,8 +1081,6 @@ function renderCheckPrizeList(){
  `).join("");
 }
 
-/* КЕЛЕСІ БӨЛІМДЕ МЕНЕДЖЕРЛЕР МЕН АДМИН ЛОГИКАСЫ */
-
 /* МЕНЕДЖЕРЛЕР */
 
 async function load(){
@@ -1429,6 +1474,10 @@ async function checkROP(){
  );
 
  updateROPViews();
+
+ if(isROP){
+  await loadApprovalRequests();
+ }
 }
 
 function updateROPViews(){
@@ -1458,6 +1507,9 @@ async function logout(){
  el("adminPanel").classList.add("hidden");
 
  updateROPViews();
+
+ el("approvalRequests").innerHTML="";
+ el("approvalCount").textContent="";
 }
 
 /* МЕНЕДЖЕР ФОРМАСЫ */
@@ -1624,7 +1676,224 @@ async function deleteManager(id){
  }
 }
 
-/* БІРІНШІ ФОРТУНА ТАРИХЫ */
+/* ФОРТУНА: РОП РҰҚСАТЫ */
+
+function approvalErrorMessage(error){
+ const msg=String(error?.message||error||"");
+
+ if(msg.includes("Incorrect PIN"))
+  return "PIN-код қате.";
+
+ if(msg.includes("No unrequested spins available"))
+  return "Бос мүмкіндік жоқ немесе өтінім бұрын жіберілген.";
+
+ if(msg.includes("No spins available"))
+  return "Айналдыру мүмкіндігі жоқ.";
+
+ if(msg.includes("ROP approval required"))
+  return "Алдымен РОП рұқсатын ал.";
+
+ return msg;
+}
+
+async function requestFortuneApproval(wheel){
+ if(!["million","check"].includes(wheel)||
+    approvalRequestBusy[wheel])return;
+
+ const isMillion=wheel==="million";
+
+ const manager=isMillion
+  ?getSelectedManager()
+  :getSelectedCheckManager();
+
+ const pinInput=el(
+  isMillion?"fortunePin":"checkFortunePin"
+ );
+
+ const result=el(
+  isMillion?"spinResult":"checkSpinResult"
+ );
+
+ const button=el(
+  isMillion?"requestMillionButton":"requestCheckButton"
+ );
+
+ const pin=pinInput.value.trim();
+
+ if(!manager)return alert("Менеджерді таңда.");
+
+ if(!/^\d{4}$/.test(pin))
+  return alert("4 таңбалы PIN енгіз.");
+
+ approvalRequestBusy[wheel]=true;
+ button.disabled=true;
+
+ try{
+  const {data,error}=await db.rpc(
+   "request_fortune_approval",{
+    p_manager_id:String(manager.id),
+    p_pin:pin,
+    p_wheel_type:wheel
+   }
+  );
+
+  if(error)throw error;
+
+  if(!data?.success)
+   throw new Error("Өтінім тіркелмеді.");
+
+  result.innerHTML=`
+   <strong>🔐 Өтінім жіберілді</strong>
+   <span>
+    РОП мақұлдағаннан кейін айналдыра аласың.
+    Telegram хабарламасы автоматты жіберіледі.
+   </span>
+  `;
+
+  pinInput.value="";
+
+  if(isROP)await loadApprovalRequests();
+
+ }catch(error){
+  result.innerHTML=`
+   <strong>Өтінім жіберілмеді</strong>
+   <span>${safe(approvalErrorMessage(error))}</span>
+  `;
+
+ }finally{
+  approvalRequestBusy[wheel]=false;
+  button.disabled=false;
+ }
+}
+
+/* РОП: КЕЛГЕН ӨТІНІМДЕР */
+
+async function loadApprovalRequests(){
+ if(!isROP)return;
+
+ const box=el("approvalRequests");
+
+ box.innerHTML=
+  '<div class="muted">Өтінімдер жүктелуде...</div>';
+
+ const {data,error}=await db
+  .from("fortune_approval_requests")
+  .select(
+   "id,manager_id,manager_name,wheel_type,status,created_at"
+  )
+  .in("status",["pending","approved"])
+  .order("created_at",{ascending:false})
+  .limit(100);
+
+ if(error){
+  box.textContent=
+   "Өтінімдерді жүктеу қатесі: "+error.message;
+  return;
+ }
+
+ const rows=data||[];
+
+ const pending=rows.filter(
+  r=>r.status==="pending"
+ );
+
+ el("approvalCount").textContent=
+  `(${pending.length} күтіп тұр)`;
+
+ if(!rows.length){
+  box.innerHTML=
+   '<div class="muted">Қазір өтінім жоқ.</div>';
+  return;
+ }
+
+ box.innerHTML=rows.map(r=>{
+  const wheel=r.wheel_type==="million"
+   ?"1 000 000 ₸"
+   :"1 чек";
+
+  const time=r.created_at
+   ?new Date(r.created_at).toLocaleString("kk-KZ")
+   :"";
+
+  const actions=r.status==="pending"?`
+   <div class="actions">
+    <button type="button"
+     onclick="reviewFortuneApproval('${safe(r.id)}',true)">
+     ✓ МАҚҰЛДАУ
+    </button>
+
+    <button type="button" class="danger"
+     onclick="reviewFortuneApproval('${safe(r.id)}',false)">
+     ✕ БАС ТАРТУ
+    </button>
+   </div>
+  `:'<span class="muted">✓ Мақұлданды — айналдыруды күтуде</span>';
+
+  return `
+   <div class="approval-row">
+    <div>
+     <strong>${safe(r.manager_name)}</strong>
+     · ${safe(wheel)}
+
+     <div class="approval-status">
+      ${safe(time)} ·
+      ${r.status==="pending"
+       ?"⏳ Күтуде"
+       :"✅ Рұқсат берілді"}
+     </div>
+    </div>
+    ${actions}
+   </div>
+  `;
+ }).join("");
+}
+
+/* РОП: МАҚҰЛДАУ НЕМЕСЕ БАС ТАРТУ */
+
+async function reviewFortuneApproval(requestId,approve){
+ if(!isROP||approvalReviewBusy)return;
+
+ if(!confirm(
+  approve
+   ?"Бұл өтінімді мақұлдайсың ба?"
+   :"Бұл өтінімнен бас тартасың ба?"
+ ))return;
+
+ approvalReviewBusy=true;
+
+ try{
+  const {data,error}=await db.rpc(
+   "review_fortune_request",{
+    p_request_id:requestId,
+    p_approve:approve
+   }
+  );
+
+  if(error)throw error;
+
+  if(data?.success===false){
+   throw new Error(
+    data?.message||"Өтінім өңделмеді."
+   );
+  }
+
+  await loadApprovalRequests();
+
+  alert(
+   approve
+    ?"Рұқсат берілді! Менеджер енді айналдыра алады."
+    :"Өтінім қабылданбады."
+  );
+
+ }catch(error){
+  alert("Қате: "+error.message);
+
+ }finally{
+  approvalReviewBusy=false;
+ }
+}
+
+/* 1 МЛН ₸ ФОРТУНА */
 
 function refreshFortuneManagerOptions(){
  const select=el("fortuneManager");
@@ -1642,7 +1911,7 @@ function refreshFortuneManagerOptions(){
 
  if(managers.some(
   m=>String(m.id)===selected
- )){
+  )){
   select.value=selected;
  }
 }
@@ -1652,12 +1921,6 @@ function getSelectedManager(){
   m=>String(m.id)===el("fortuneManager").value
  );
 }
-
-/* 4-БӨЛІМДЕ ЖАЛҒАСАДЫ */
-
-/* ==========================================
-   1 МЛН ₸ ФОРТУНА
-========================================== */
 
 async function loadFortuneHistory(){
  try{
@@ -1873,7 +2136,7 @@ async function spinFortune(){
  }catch(error){
   el("spinResult").innerHTML=`
    <strong>Айналдыру орындалмады</strong>
-   <span>${safe(error.message)}</span>`;
+   <span>${safe(approvalErrorMessage(error))}</span>`;
 
  }finally{
   wheelBusy=false;
@@ -1881,9 +2144,7 @@ async function spinFortune(){
  }
 }
 
-/* ==========================================
-   1 ЧЕК = 1 АЙНАЛЫМ ФОРТУНАСЫ
-========================================== */
+/* 1 ЧЕК = 1 АЙНАЛЫМ ФОРТУНАСЫ */
 
 function refreshCheckFortuneManagerOptions(){
  const select=el("checkFortuneManager");
@@ -1899,7 +2160,9 @@ function refreshCheckFortuneManagerOptions(){
    </option>
   `).join("");
 
- if(managers.some(m=>String(m.id)===selected)){
+ if(managers.some(
+  m=>String(m.id)===selected
+  )){
   select.value=selected;
  }
 }
@@ -1909,6 +2172,8 @@ function getSelectedCheckManager(){
   m=>String(m.id)===el("checkFortuneManager").value
  );
 }
+
+/* 1 ЧЕК = 1 АЙНАЛЫМ ФОРТУНАСЫ */
 
 async function loadCheckFortuneHistory(){
  try{
@@ -2102,7 +2367,7 @@ async function spinCheckFortune(){
  }catch(error){
   el("checkSpinResult").innerHTML=`
    <strong>Айналдыру орындалмады</strong>
-   <span>${safe(error.message)}</span>`;
+   <span>${safe(approvalErrorMessage(error))}</span>`;
 
  }finally{
   checkWheelBusy=false;
@@ -2110,102 +2375,154 @@ async function spinCheckFortune(){
  }
 }
 
-/* ==========================================
-   TV MODE
-========================================== */
+/* TV MODE */
 
-let isTVMode=false;
+let tvEnabled=false;
 
 function tvMode(){
- isTVMode=!isTVMode;
+ tvEnabled=!tvEnabled;
 
- document.body.classList.toggle(
-  "tv",isTVMode
- );
+ document.body.classList.toggle("tv",tvEnabled);
 
- const ranking=el("ranking");
- const dynamics=el("salesDynamics");
-
- if(isTVMode){
-  ranking.parentElement
-   .querySelector(".section-title")
-   ?.classList.add("hidden");
-
-  ranking.classList.add("hidden");
-  dynamics.classList.add("hidden");
-
+ if(tvEnabled){
   document.documentElement.requestFullscreen?.()
    .catch(()=>{});
 
+  window.scrollTo({
+   top:0,
+   behavior:"smooth"
+  });
+
  }else{
-  ranking.classList.remove("hidden");
-  dynamics.classList.remove("hidden");
-
-  document.querySelectorAll(".section-title")
-   .forEach(x=>x.classList.remove("hidden"));
-
   if(document.fullscreenElement){
    document.exitFullscreen?.().catch(()=>{});
   }
  }
+
+ render();
 }
 
-/* ==========================================
-   EVENTS
-========================================== */
+/* ФОРТУНА МЕНЕДЖЕРІН ТАҢДАУ */
 
-el("fortuneManager").addEventListener(
- "change",updateSpinAvailability
-);
+el("fortuneManager").addEventListener("change",()=>{
+ el("fortunePin").value="";
 
-el("checkFortuneManager").addEventListener(
- "change",updateCheckSpinAvailability
-);
+ el("spinResult").innerHTML=`
+  <strong>Сәттілік серік болсын!</strong>
+  <span>PIN енгізіп, РОП рұқсатын ал.</span>
+ `;
 
-el("fortunePin").addEventListener("keydown",e=>{
- if(e.key==="Enter"){
-  e.preventDefault();
-  spinFortune();
- }
+ updateSpinAvailability();
 });
 
-el("checkFortunePin").addEventListener("keydown",e=>{
- if(e.key==="Enter"){
-  e.preventDefault();
-  spinCheckFortune();
- }
+el("checkFortuneManager").addEventListener("change",()=>{
+ el("checkFortunePin").value="";
+
+ el("checkSpinResult").innerHTML=`
+  <strong>Сәттілік серік болсын!</strong>
+  <span>PIN енгізіп, РОП рұқсатын ал.</span>
+ `;
+
+ updateCheckSpinAvailability();
 });
+
+/* ТЕРЕЗЕ ӨЛШЕМІ ӨЗГЕРГЕНДЕ */
+
+let resizeTimer=null;
 
 window.addEventListener("resize",()=>{
- renderWheelLabels();
- renderCheckWheelLabels();
- renderManagerDynamics();
+ clearTimeout(resizeTimer);
+
+ resizeTimer=setTimeout(()=>{
+  renderWheelLabels();
+  renderCheckWheelLabels();
+  renderManagerDynamics();
+ },250);
 });
 
-/* ==========================================
-   САЙТТЫ ІСКЕ ҚОСУ
-========================================== */
+/* АВТОМАТТЫ ЖАҢАРТУ */
 
-async function initializeApp(){
- initializeDynamicsDates();
+let refreshBusy=false;
 
- renderWheelLabels();
- renderCheckWheelLabels();
+async function refreshAll(){
+ if(refreshBusy||wheelBusy||checkWheelBusy)return;
 
- renderPrizeList();
- renderCheckPrizeList();
+ refreshBusy=true;
 
- await checkROP();
- await load();
+ try{
+  await load();
 
- setInterval(async()=>{
-  if(!wheelBusy&&!checkWheelBusy){
-   await load();
+  if(isROP){
+   await loadApprovalRequests();
   }
- },15000);
+
+ }catch(error){
+  console.error("Refresh error:",error);
+
+ }finally{
+  refreshBusy=false;
+ }
 }
 
-initializeApp();
+/* SUPABASE REALTIME */
+
+function setupRealtime(){
+ db.channel("daryn-sales-live")
+  .on(
+   "postgres_changes",
+   {
+    event:"*",
+    schema:"public",
+    table:"managers"
+   },
+   ()=>{
+    refreshAll();
+   }
+  )
+  .subscribe();
+}
+
+/* САЙТТЫ ІСКЕ ҚОСУ */
+
+async function initializeApp(){
+ try{
+  initializeDynamicsDates();
+
+  renderWheelLabels();
+  renderCheckWheelLabels();
+
+  renderPrizeList();
+  renderCheckPrizeList();
+
+  await checkROP();
+  await load();
+
+  setupRealtime();
+
+  setInterval(()=>{
+   refreshAll();
+  },15000);
+
+  console.log("DARYN SALES LEAGUE READY");
+
+ }catch(error){
+  console.error("Initialization error:",error);
+
+  alert(
+   "Сайтты жүктеу кезінде қате: "+
+   error.message
+  );
+ }
+}
+
+if(document.readyState==="loading"){
+ document.addEventListener(
+  "DOMContentLoaded",
+  initializeApp
+ );
+}else{
+ initializeApp();
+}
 
 </script>
 </body>
