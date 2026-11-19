@@ -91,25 +91,36 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
    <h2>⚙️ РОП БАСҚАРУ ПАНЕЛІ</h2>
    <button class="secondary" onclick="logout()">Шығу</button>
   </div>
+
   <div id="notice"></div>
   <h3 id="formTitle">Менеджер қосу</h3>
+
   <form id="managerForm">
    <input type="hidden" id="managerId">
+
    <label>Менеджер аты</label>
    <input id="name" required placeholder="Мысалы: Айдос">
+
    <label>Фото URL</label>
    <input id="photo" placeholder="Фото сілтемесі">
+
+   <label>Галереядан фото жүктеу</label>
+   <input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp">
+
    <div class="form-grid">
     <div><label>Жоспар (₸)</label><input id="plan" type="number" min="0" required></div>
     <div><label>Сатылым (₸)</label><input id="sales" type="number" min="0" required></div>
    </div>
+
    <label>Чек саны</label>
    <input id="checks" type="number" min="0" required>
+
    <div class="actions">
     <button type="submit">Сақтау</button>
     <button type="button" class="secondary" onclick="resetForm()">Тазалау</button>
    </div>
   </form>
+
   <div class="section-title"><h3>Менеджерлерді басқару</h3></div>
   <div id="editList"></div>
  </section>
@@ -122,6 +133,7 @@ const SUPABASE_URL = "https://bvydfvsmglnnezkodsgz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00";
 
 const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 let managers=[];
 let isROP=false;
 
@@ -132,7 +144,10 @@ const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
 
 async function load(){
  const {data,error}=await db.from("managers").select("*").order("sales",{ascending:false});
- if(error){document.getElementById("notice").textContent=error.message;return}
+ if(error){
+  document.getElementById("notice").textContent=error.message;
+  return;
+ }
  managers=data||[];
  render();
 }
@@ -142,58 +157,85 @@ function render(){
  const sales=sorted.reduce((a,m)=>a+Number(m.sales||0),0);
  const checks=sorted.reduce((a,m)=>a+Number(m.checks||0),0);
  const plans=sorted.reduce((a,m)=>a+Number(m.plan||0),0);
+
  document.getElementById("totalSales").textContent=money(sales);
  document.getElementById("totalChecks").textContent=checks;
  document.getElementById("totalPercent").textContent=pct(sales,plans)+"%";
  document.getElementById("managerCount").textContent=sorted.length+" менеджер";
 
  document.getElementById("topFive").innerHTML=sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
- document.getElementById("ranking").innerHTML=sorted.map((m,i)=>card(m,i,false)).join("")||'<div class="panel muted">Әзірге менеджерлер қосылмаған.</div>';
+
+ document.getElementById("ranking").innerHTML=
+  sorted.map((m,i)=>card(m,i,false)).join("")||
+  '<div class="panel muted">Әзірге менеджерлер қосылмаған.</div>';
 
  document.getElementById("editList").innerHTML=isROP?sorted.map(m=>`
  <div class="rank-row">
- <div class="info"><h3>${safe(m.name)}</h3><span class="muted">${money(m.sales)}</span></div>
- <button class="secondary" onclick="editManager(${m.id})">Өңдеу</button>
- <button class="danger" onclick="deleteManager(${m.id})">Жою</button>
+  <div class="info">
+   <h3>${safe(m.name)}</h3>
+   <span class="muted">${money(m.sales)}</span>
+  </div>
+  <button class="secondary" onclick="editManager(${m.id})">Өңдеу</button>
+  <button class="danger" onclick="deleteManager(${m.id})">Жою</button>
  </div>`).join(""):"";
 }
 
 function card(m,i,top){
  const p=pct(Number(m.sales||0),Number(m.plan||0));
+
  return `<div class="${top?'manager '+(i===0?'first':''):'rank-row'}">
- <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
- <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
- <div class="${top?'':'info'}">
- <h3>${safe(m.name)}</h3>
- <div class="amount">${money(m.sales)}</div>
- <div class="muted">${Number(m.checks||0)} чек</div>
- </div>
- <div style="${top?'':'min-width:100px;text-align:right'}">
- <strong style="color:#f2c66d">${p}%</strong>
- <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
- <div class="details"><span>${top?'':'Жоспар'}</span><span>${money(m.plan)}</span></div>
- <div class="details"><span>Қалды</span><span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span></div>
- </div>
+  <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
+  <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
+  <div class="${top?'':'info'}">
+   <h3>${safe(m.name)}</h3>
+   <div class="amount">${money(m.sales)}</div>
+   <div class="muted">${Number(m.checks||0)} чек</div>
+  </div>
+  <div style="${top?'':'min-width:100px;text-align:right'}">
+   <strong style="color:#f2c66d">${p}%</strong>
+   <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
+   <div class="details"><span>${top?'':'Жоспар'}</span><span>${money(m.plan)}</span></div>
+   <div class="details"><span>Қалды</span><span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span></div>
+  </div>
  </div>`;
 }
 
 async function login(){
  const email=prompt("РОП email:");
  if(!email)return;
+
  const password=prompt("Құпиясөз:");
  if(!password)return;
+
  const {error}=await db.auth.signInWithPassword({email,password});
- if(error){alert(error.message);return}
+
+ if(error){
+  alert(error.message);
+  return;
+ }
+
  await checkROP();
 }
 
 async function checkROP(){
  const {data:{user}}=await db.auth.getUser();
- if(!user){isROP=false;return}
- const {data,error}=await db.from("rop_users").select("user_id").eq("user_id",user.id).maybeSingle();
+
+ if(!user){
+  isROP=false;
+  return;
+ }
+
+ const {data,error}=await db.from("rop_users")
+  .select("user_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
  isROP=!!data&&!error;
+
  document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
+
  if(!isROP)alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
+
  render();
 }
 
@@ -210,30 +252,91 @@ function resetForm(){
  document.getElementById("formTitle").textContent="Менеджер қосу";
 }
 
+// ФОТОНЫ SUPABASE STORAGE-ҚА ЖҮКТЕУ
+async function uploadManagerPhoto(file){
+ if(!file)return null;
+
+ const ext=file.name.split(".").pop().toLowerCase();
+ const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+ const {error}=await db.storage
+  .from("manager-photos")
+  .upload(fileName,file,{upsert:true});
+
+ if(error)throw error;
+
+ const {data}=db.storage
+  .from("manager-photos")
+  .getPublicUrl(fileName);
+
+ return data.publicUrl;
+}
+
+// МЕНЕДЖЕРДІ САҚТАУ
 document.getElementById("managerForm").addEventListener("submit",async e=>{
  e.preventDefault();
+
  if(!isROP)return alert("Рұқсат жоқ");
- const id=document.getElementById("managerId").value;
- const item={
- name:document.getElementById("name").value.trim(),
- photo_url:document.getElementById("photo").value.trim()||null,
- plan:Number(document.getElementById("plan").value),
- sales:Number(document.getElementById("sales").value),
- checks:Number(document.getElementById("checks").value)
- };
- const result=id
- ?await db.from("managers").update(item).eq("id",id)
- :await db.from("managers").insert(item);
- if(result.error){alert(result.error.message);return}
- resetForm();await load();
+
+ const button=e.submitter;
+ button.disabled=true;
+ button.textContent="Сақталуда...";
+
+ try{
+  const id=document.getElementById("managerId").value;
+  const file=document.getElementById("photoFile").files[0];
+
+  let photoUrl=document.getElementById("photo").value.trim()||null;
+
+  if(file){
+   if(file.size>5*1024*1024){
+    alert("Фото көлемі 5 MB-тан аспауы керек");
+    return;
+   }
+
+   if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    alert("Тек JPG, PNG немесе WEBP форматындағы фото жүкте");
+    return;
+   }
+
+   photoUrl=await uploadManagerPhoto(file);
+  }
+
+  const item={
+   name:document.getElementById("name").value.trim(),
+   photo_url:photoUrl,
+   plan:Number(document.getElementById("plan").value),
+   sales:Number(document.getElementById("sales").value),
+   checks:Number(document.getElementById("checks").value)
+  };
+
+  const result=id
+   ?await db.from("managers").update(item).eq("id",id)
+   :await db.from("managers").insert(item);
+
+  if(result.error)throw result.error;
+
+  resetForm();
+  await load();
+
+  alert("Менеджер сәтті сақталды!");
+
+ }catch(error){
+  alert("Қате: "+error.message);
+ }finally{
+  button.disabled=false;
+  button.textContent="Сақтау";
+ }
 });
 
 function editManager(id){
  const m=managers.find(x=>String(x.id)===String(id));
  if(!m)return;
+
  document.getElementById("managerId").value=m.id;
  document.getElementById("name").value=m.name;
  document.getElementById("photo").value=m.photo_url||"";
+ document.getElementById("photoFile").value="";
  document.getElementById("plan").value=m.plan;
  document.getElementById("sales").value=m.sales;
  document.getElementById("checks").value=m.checks;
@@ -243,20 +346,27 @@ function editManager(id){
 
 async function deleteManager(id){
  if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
+
  const {error}=await db.from("managers").delete().eq("id",id);
- if(error)alert(error.message);else await load();
+
+ if(error)alert(error.message);
+ else await load();
 }
 
 function tvMode(){
  document.body.classList.toggle("tv");
- document.querySelectorAll(".admin,header button").forEach(x=>x.style.display=document.body.classList.contains("tv")?"none":"");
+ document.querySelectorAll(".admin,header button").forEach(x=>
+  x.style.display=document.body.classList.contains("tv")?"none":""
+ );
  document.querySelector(".hero").scrollIntoView();
 }
 
 db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
 load();
 </script>
+
 </body>
 </html>
+
 
 
