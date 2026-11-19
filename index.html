@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="kk">
 <head>
@@ -15,6 +14,7 @@ header{padding:25px 5%;display:flex;justify-content:space-between;align-items:ce
 button{border:0;border-radius:9px;padding:11px 17px;background:#e6b957;color:#101521;font-weight:bold;cursor:pointer}
 button.secondary{background:#273349;color:white}
 button.danger{background:#a93636;color:white}
+button:disabled{opacity:.5}
 .container{max-width:1150px;margin:auto;padding:25px 5%}
 .hero{text-align:center;padding:30px 0}
 .hero h1{font-size:clamp(32px,6vw,55px);margin:5px;color:#f3ca76;letter-spacing:3px}
@@ -26,8 +26,12 @@ button.danger{background:#a93636;color:white}
 .section-title{display:flex;justify-content:space-between;align-items:center;margin:30px 0 15px}
 .section-title h2{font-size:19px;letter-spacing:1px}
 .top-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
-.manager{text-align:center;position:relative}
-.manager.first{border-color:#cda64e;background:linear-gradient(145deg,#3a301e,#151c2a);box-shadow:0 0 25px #d4a63b22}
+.manager{text-align:center;position:relative;overflow:hidden}
+.manager.first{
+ border-color:#cda64e;
+ background:linear-gradient(145deg,#3a301e,#151c2a);
+ box-shadow:0 0 25px #d4a63b22,0 0 45px #d4a63b11;
+}
 .avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#34415a;border:2px solid #d7b35d;margin:8px auto}
 .rank{color:#f2c66d;font-size:23px;font-weight:900}
 .manager h3{margin:8px 0}
@@ -50,25 +54,78 @@ label{font-size:12px;color:#aab5c8}
 footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 #notice{color:#f2c66d;font-size:13px;margin:10px 0}
 
+/* 👑 ТҰРАҚТЫ ЧЕМПИОН ТӘЖІ */
+.leader-crown{
+ display:block;
+ font-size:38px;
+ line-height:1;
+ margin-bottom:7px;
+ filter:drop-shadow(0 0 8px #ffd34e);
+ animation:crownFloat 1.8s ease-in-out infinite,
+          crownGlow 2s ease-in-out infinite;
+}
+.manager.first .leader-crown{font-size:45px}
+.rank-row .leader-crown{
+ font-size:27px;
+ margin-bottom:4px;
+ text-align:left;
+}
+@keyframes crownFloat{
+ 0%,100%{transform:translateY(0) rotate(-3deg)}
+ 50%{transform:translateY(-8px) rotate(3deg)}
+}
+@keyframes crownGlow{
+ 0%,100%{filter:drop-shadow(0 0 5px #ffd34e)}
+ 50%{filter:drop-shadow(0 0 18px #fff0a0) drop-shadow(0 0 30px #ffb52d)}
+}
+
+/* ЧЕМПИОН КАРТОЧКАСЫ */
+.manager.first::after{
+ content:"✦";
+ position:absolute;
+ right:15px;
+ top:15px;
+ color:#ffe28b;
+ animation:sparkle 2s infinite;
+}
+@keyframes sparkle{
+ 0%,100%{opacity:.2;transform:scale(.7) rotate(0)}
+ 50%{opacity:1;transform:scale(1.3) rotate(90deg)}
+}
+
 /* LIVE CHAMPION EFFECT */
 #championOverlay{
- position:fixed;inset:0;z-index:99999;
- display:flex;align-items:center;justify-content:center;
+ position:fixed;
+ inset:0;
+ z-index:99999;
+ display:flex;
+ align-items:center;
+ justify-content:center;
  background:radial-gradient(ellipse at center,#33240b 0%,#111522 48%,#03050b 100%);
- opacity:0;visibility:hidden;pointer-events:none;
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none;
  transition:opacity .4s,visibility .4s;
  overflow:hidden;
 }
 #championOverlay.active{
- opacity:1;visibility:visible;
+ opacity:1;
+ visibility:visible;
 }
 #confettiCanvas{
- position:absolute;inset:0;width:100%;height:100%;
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
  pointer-events:none;
 }
 .champion-content{
- position:relative;z-index:2;text-align:center;
- padding:25px;width:100%;max-width:500px;
+ position:relative;
+ z-index:2;
+ text-align:center;
+ padding:25px;
+ width:100%;
+ max-width:500px;
  transform:scale(.45) translateY(50px);
  opacity:0;
 }
@@ -76,44 +133,60 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
  animation:championEnter .8s cubic-bezier(.16,1,.3,1) forwards;
 }
 .champion-kicker{
- color:#f5d47d;font-size:13px;font-weight:900;
- letter-spacing:6px;margin-bottom:15px;
+ color:#f5d47d;
+ font-size:13px;
+ font-weight:900;
+ letter-spacing:6px;
+ margin-bottom:15px;
  text-shadow:0 0 20px #ffc94c;
 }
 .champion-crown{
- font-size:65px;display:block;
+ font-size:65px;
+ display:block;
  filter:drop-shadow(0 0 20px #ffca4d);
  animation:crownBounce 1.2s infinite alternate;
 }
 .champion-photo-wrap{
- width:165px;height:165px;margin:18px auto;
- border-radius:50%;padding:6px;
+ width:165px;
+ height:165px;
+ margin:18px auto;
+ border-radius:50%;
+ padding:6px;
  background:linear-gradient(135deg,#fff0a7,#d69a24,#fff0a7,#a76b16);
  box-shadow:0 0 25px #ffce58,0 0 65px #ffb52d88;
  animation:photoGlow 1.3s infinite alternate;
 }
 .champion-photo{
- width:100%;height:100%;border-radius:50%;
- object-fit:cover;border:5px solid #101522;
+ width:100%;
+ height:100%;
+ border-radius:50%;
+ object-fit:cover;
+ border:5px solid #101522;
 }
 .champion-name{
  font-size:clamp(27px,7vw,43px);
- font-weight:1000;color:#fff;
+ font-weight:1000;
+ color:#fff;
  text-shadow:0 0 20px #e9b94e;
  margin:12px 0;
 }
 .champion-title{
  font-size:clamp(30px,8vw,49px);
- font-weight:1000;letter-spacing:3px;
+ font-weight:1000;
+ letter-spacing:3px;
  color:#f5ca69;
  text-shadow:0 0 12px #ffb92d,0 0 35px #ff9d18;
 }
 .champion-subtitle{
- color:#fff;font-size:13px;
- letter-spacing:4px;margin-top:14px;
+ color:#fff;
+ font-size:13px;
+ letter-spacing:4px;
+ margin-top:14px;
 }
 .champion-line{
- width:150px;height:2px;margin:20px auto;
+ width:150px;
+ height:2px;
+ margin:20px auto;
  background:linear-gradient(90deg,transparent,#ffdb7b,transparent);
 }
 @keyframes championEnter{
@@ -129,18 +202,23 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
  from{box-shadow:0 0 20px #ffce58,0 0 35px #ffb52d55}
  to{box-shadow:0 0 35px #ffce58,0 0 85px #ffb52d}
 }
+
 @media(max-width:600px){
  .stats{grid-template-columns:1fr 1fr}
  .stat:last-child{grid-column:span 2}
  .form-grid{grid-template-columns:1fr}
  .container{padding:18px 4%}
  .champion-photo-wrap{width:135px;height:135px}
+ .rank-row{gap:8px;padding:10px}
+ .rank-row .avatar{width:43px;height:43px}
+ .rank-row .details{font-size:10px}
 }
 @media print{button,.admin{display:none}}
 </style>
 </head>
 
 <body>
+
 <header>
  <div class="logo">DARYN.</div>
  <div class="actions">
@@ -150,6 +228,7 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 </header>
 
 <main class="container">
+
  <div class="hero">
   <div class="sub">DARYN ONLINE • SALES DEPARTMENT</div>
   <h1>SALES LEAGUE</h1>
@@ -157,21 +236,32 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
  </div>
 
  <div class="stats">
-  <div class="stat"><small>ЖАЛПЫ САТЫЛЫМ</small><strong id="totalSales">0 ₸</strong></div>
-  <div class="stat"><small>ЖАЛПЫ ЧЕК</small><strong id="totalChecks">0</strong></div>
-  <div class="stat"><small>КОМАНДА ЖОСПАРЫ</small><strong id="totalPercent">0%</strong></div>
+  <div class="stat">
+   <small>ЖАЛПЫ САТЫЛЫМ</small>
+   <strong id="totalSales">0 ₸</strong>
+  </div>
+  <div class="stat">
+   <small>ЖАЛПЫ ЧЕК</small>
+   <strong id="totalChecks">0</strong>
+  </div>
+  <div class="stat">
+   <small>КОМАНДА ЖОСПАРЫ</small>
+   <strong id="totalPercent">0%</strong>
+  </div>
  </div>
 
  <div class="section-title">
   <h2>🏆 TOP 5 MANAGERS</h2>
   <span class="muted">ҮЗДІКТЕР</span>
  </div>
+
  <div class="top-grid" id="topFive"></div>
 
  <div class="section-title">
   <h2>📊 ТОЛЫҚ РЕЙТИНГ</h2>
   <span class="muted" id="managerCount">0 менеджер</span>
  </div>
+
  <div class="ranking" id="ranking"></div>
 
  <section class="panel admin hidden" id="adminPanel">
@@ -196,8 +286,14 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
    <input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp">
 
    <div class="form-grid">
-    <div><label>Жоспар (₸)</label><input id="plan" type="number" min="0" required></div>
-    <div><label>Сатылым (₸)</label><input id="sales" type="number" min="0" required></div>
+    <div>
+     <label>Жоспар (₸)</label>
+     <input id="plan" type="number" min="0" required>
+    </div>
+    <div>
+     <label>Сатылым (₸)</label>
+     <input id="sales" type="number" min="0" required>
+    </div>
    </div>
 
    <label>Чек саны</label>
@@ -209,9 +305,13 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
    </div>
   </form>
 
-  <div class="section-title"><h3>Менеджерлерді басқару</h3></div>
+  <div class="section-title">
+   <h3>Менеджерлерді басқару</h3>
+  </div>
+
   <div id="editList"></div>
  </section>
+
 </main>
 
 <footer>DARYN ONLINE • SALES LEAGUE • 2026</footer>
@@ -219,14 +319,18 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 <!-- CHAMPION LIVE OVERLAY -->
 <div id="championOverlay">
  <canvas id="confettiCanvas"></canvas>
+
  <div class="champion-content">
   <div class="champion-kicker">DARYN SALES LEAGUE</div>
   <span class="champion-crown">👑</span>
+
   <div class="champion-title">NEW NUMBER ONE</div>
   <div class="champion-line"></div>
+
   <div class="champion-photo-wrap">
    <img class="champion-photo" id="championPhoto" src="" alt="Жаңа лидер">
   </div>
+
   <div class="champion-name" id="championName">CHAMPION</div>
   <div class="champion-subtitle">THE NEW LEADER IS HERE</div>
  </div>
@@ -247,11 +351,24 @@ let confettiAnimation=null;
 
 const money=n=>new Intl.NumberFormat("kk-KZ").format(Number(n)||0)+" ₸";
 const pct=(s,p)=>p>0?Math.round(s/p*100):0;
-const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;",
+ "<":"&lt;",
+ ">":"&gt;",
+ '"':"&quot;",
+ "'":"&#39;"
+}[c]));
+
 const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
 
+// ДЕРЕКТЕРДІ ЖҮКТЕУ
 async function load(){
- const {data,error}=await db.from("managers").select("*").order("sales",{ascending:false});
+
+ const {data,error}=await db
+  .from("managers")
+  .select("*")
+  .order("sales",{ascending:false});
 
  if(error){
   document.getElementById("notice").textContent=error.message;
@@ -259,26 +376,35 @@ async function load(){
  }
 
  const newManagers=data||[];
- const sorted=[...newManagers].sort((a,b)=>Number(b.sales)-Number(a.sales));
+
+ const sorted=[...newManagers].sort(
+  (a,b)=>Number(b.sales||0)-Number(a.sales||0)
+ );
+
  const newLeader=sorted[0]||null;
  const newLeaderId=newLeader?String(newLeader.id):null;
 
- // Жаңа бірінші орын иесін анықтау
- if(hasLoadedOnce && newLeaderId!==previousLeaderId && newLeader){
-  const winnerChanged=previousLeaderId!==null;
-  if(winnerChanged){
-   celebrateChampion(newLeader);
-  }
+ // Бірінші орын өзгерген кезде анимация
+ if(hasLoadedOnce && previousLeaderId!==null &&
+    newLeaderId!==previousLeaderId && newLeader){
+
+  celebrateChampion(newLeader);
  }
 
  previousLeaderId=newLeaderId;
  hasLoadedOnce=true;
+
  managers=newManagers;
  render();
 }
 
+// РЕЙТИНГТІ КӨРСЕТУ
 function render(){
- const sorted=[...managers].sort((a,b)=>Number(b.sales)-Number(a.sales));
+
+ const sorted=[...managers].sort(
+  (a,b)=>Number(b.sales||0)-Number(a.sales||0)
+ );
+
  const sales=sorted.reduce((a,m)=>a+Number(m.sales||0),0);
  const checks=sorted.reduce((a,m)=>a+Number(m.checks||0),0);
  const plans=sorted.reduce((a,m)=>a+Number(m.plan||0),0);
@@ -286,53 +412,88 @@ function render(){
  document.getElementById("totalSales").textContent=money(sales);
  document.getElementById("totalChecks").textContent=checks;
  document.getElementById("totalPercent").textContent=pct(sales,plans)+"%";
- document.getElementById("managerCount").textContent=sorted.length+" менеджер";
 
- document.getElementById("topFive").innerHTML=sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
+ document.getElementById("managerCount").textContent=
+  sorted.length+" менеджер";
+
+ document.getElementById("topFive").innerHTML=
+  sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
 
  document.getElementById("ranking").innerHTML=
   sorted.map((m,i)=>card(m,i,false)).join("")||
   '<div class="panel muted">Әзірге менеджерлер қосылмаған.</div>';
 
- document.getElementById("editList").innerHTML=isROP?sorted.map(m=>`
- <div class="rank-row">
-  <div class="info">
-   <h3>${safe(m.name)}</h3>
-   <span class="muted">${money(m.sales)}</span>
-  </div>
-  <button class="secondary" onclick="editManager(${m.id})">Өңдеу</button>
-  <button class="danger" onclick="deleteManager(${m.id})">Жою</button>
- </div>`).join(""):"";
+ document.getElementById("editList").innerHTML=isROP?
+  sorted.map(m=>`
+   <div class="rank-row">
+    <div class="info">
+     <h3>${safe(m.name)}</h3>
+     <span class="muted">${money(m.sales)}</span>
+    </div>
+    <button class="secondary" onclick="editManager(${m.id})">Өңдеу</button>
+    <button class="danger" onclick="deleteManager(${m.id})">Жою</button>
+   </div>
+  `).join(""):"";
 }
 
+// МЕНЕДЖЕР КАРТОЧКАСЫ
 function card(m,i,top){
- const p=pct(Number(m.sales||0),Number(m.plan||0));
 
- return `<div class="${top?'manager '+(i===0?'first':''):'rank-row'}">
-  <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
-  <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
+ const p=pct(Number(m.sales||0),Number(m.plan||0));
+ const isLeader=i===0;
+
+ return `
+ <div class="${top?'manager '+(isLeader?'first':''):'rank-row'}">
+
+  <div class="${top?'rank':''}">
+   ${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}
+  </div>
+
+  <img class="avatar"
+   src="${safe(photo(m))}"
+   onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
+
   <div class="${top?'':'info'}">
+
+   ${isLeader?'<div class="leader-crown">👑</div>':''}
+
    <h3>${safe(m.name)}</h3>
+
    <div class="amount">${money(m.sales)}</div>
    <div class="muted">${Number(m.checks||0)} чек</div>
+
   </div>
+
   <div style="${top?'':'min-width:100px;text-align:right'}">
+
    <strong style="color:#f2c66d">${p}%</strong>
-   <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
-   <div class="details"><span>${top?'':'Жоспар'}</span><span>${money(m.plan)}</span></div>
-   <div class="details"><span>Қалды</span><span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span></div>
+
+   <div class="progress">
+    <div style="width:${Math.min(p,100)}%"></div>
+   </div>
+
+   <div class="details">
+    <span>${top?'':'Жоспар'}</span>
+    <span>${money(m.plan)}</span>
+   </div>
+
+   <div class="details">
+    <span>Қалды</span>
+    <span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span>
+   </div>
+
   </div>
+
  </div>`;
 }
 
-// LIVE CHAMPION CELEBRATION
+// ЧЕМПИОН АНИМАЦИЯСЫ
 function celebrateChampion(manager){
- const overlay=document.getElementById("championOverlay");
- const name=document.getElementById("championName");
- const image=document.getElementById("championPhoto");
 
- name.textContent=manager.name;
- image.src=photo(manager);
+ const overlay=document.getElementById("championOverlay");
+
+ document.getElementById("championName").textContent=manager.name;
+ document.getElementById("championPhoto").src=photo(manager);
 
  overlay.classList.remove("active");
  void overlay.offsetWidth;
@@ -341,25 +502,26 @@ function celebrateChampion(manager){
  startConfetti();
 
  clearTimeout(celebrationTimer);
+
  celebrationTimer=setTimeout(()=>{
   overlay.classList.remove("active");
   stopConfetti();
  },6500);
 }
 
-// CONFETTI PARTICLES
+// CONFETTI
 let particles=[];
-let canvasWidth=0;
-let canvasHeight=0;
 
 function startConfetti(){
+
+ stopConfetti();
+
  const canvas=document.getElementById("confettiCanvas");
  const ctx=canvas.getContext("2d");
 
  canvas.width=window.innerWidth*devicePixelRatio;
  canvas.height=window.innerHeight*devicePixelRatio;
- canvasWidth=canvas.width;
- canvasHeight=canvas.height;
+
  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 
  const w=window.innerWidth;
@@ -367,12 +529,20 @@ function startConfetti(){
 
  particles=[];
 
- const colors=["#ffd76b","#ffffff","#e5a92e","#f7c84c","#f5e6ad","#d88c20","#ff8c42"];
+ const colors=[
+  "#ffd76b","#ffffff","#e5a92e",
+  "#f7c84c","#f5e6ad","#d88c20","#ff8c42"
+ ];
 
- // Екі жақтан хлопушка тәрізді атылу
+ // ЕКІ ЖАҚТАН ХЛОПУШКА
  for(let side=0;side<2;side++){
+
   for(let i=0;i<110;i++){
-   const x=side===0?Math.random()*w*.25:w-w*.25+Math.random()*w*.25;
+
+   const x=side===0?
+    Math.random()*w*.25:
+    w-w*.25+Math.random()*w*.25;
+
    particles.push({
     x:x,
     y:h*.65+Math.random()*h*.25,
@@ -389,8 +559,9 @@ function startConfetti(){
   }
  }
 
- // Жоғарыдан жауатын конфетти
+ // ЖОҒАРЫДАН ЖАУАТЫН КОНФЕТТИ
  for(let i=0;i<130;i++){
+
   particles.push({
    x:Math.random()*w,
    y:-Math.random()*h,
@@ -405,14 +576,15 @@ function startConfetti(){
    shape:Math.random()>.5?"rect":"circle"
   });
  }
- 
- stopConfetti();
+
  drawConfetti();
 }
 
 function drawConfetti(){
+
  const canvas=document.getElementById("confettiCanvas");
  const ctx=canvas.getContext("2d");
+
  const w=window.innerWidth;
  const h=window.innerHeight;
 
@@ -421,6 +593,7 @@ function drawConfetti(){
  particles=particles.filter(p=>p.life>0 && p.y<h+40);
 
  particles.forEach(p=>{
+
   p.x+=p.vx;
   p.y+=p.vy;
   p.vy+=p.gravity;
@@ -441,6 +614,7 @@ function drawConfetti(){
    ctx.arc(0,0,p.size/2,0,Math.PI*2);
    ctx.fill();
   }
+
   ctx.restore();
  });
 
@@ -452,14 +626,25 @@ function drawConfetti(){
 }
 
 function stopConfetti(){
+
  if(confettiAnimation){
   cancelAnimationFrame(confettiAnimation);
   confettiAnimation=null;
  }
+
+ const canvas=document.getElementById("confettiCanvas");
+
+ if(canvas){
+  const ctx=canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+ }
+
+ particles=[];
 }
 
-// ROP LOGIN
+// РОП КІРУ
 async function login(){
+
  const email=prompt("РОП email:");
  if(!email)return;
 
@@ -477,6 +662,7 @@ async function login(){
 }
 
 async function checkROP(){
+
  const {data:{user}}=await db.auth.getUser();
 
  if(!user){
@@ -493,31 +679,42 @@ async function checkROP(){
 
  isROP=!!data&&!error;
 
- document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
+ document.getElementById("adminPanel")
+  .classList.toggle("hidden",!isROP);
 
- if(!isROP)alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
+ if(!isROP){
+  alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
+ }
 
  render();
 }
 
 async function logout(){
+
  await db.auth.signOut();
+
  isROP=false;
+
  document.getElementById("adminPanel").classList.add("hidden");
+
  render();
 }
 
+// ФОРМАНЫ ТАЗАЛАУ
 function resetForm(){
+
  document.getElementById("managerForm").reset();
  document.getElementById("managerId").value="";
  document.getElementById("formTitle").textContent="Менеджер қосу";
 }
 
-// ФОТОНЫ SUPABASE STORAGE-ҚА ЖҮКТЕУ
+// ФОТО ЖҮКТЕУ
 async function uploadManagerPhoto(file){
+
  if(!file)return null;
 
  const ext=file.name.split(".").pop().toLowerCase();
+
  const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
  const {error}=await db.storage
@@ -533,23 +730,27 @@ async function uploadManagerPhoto(file){
  return data.publicUrl;
 }
 
-// МЕНЕДЖЕРДІ САҚТАУ
+// МЕНЕДЖЕР САҚТАУ
 document.getElementById("managerForm").addEventListener("submit",async e=>{
+
  e.preventDefault();
 
  if(!isROP)return alert("Рұқсат жоқ");
 
  const button=e.submitter;
+
  button.disabled=true;
  button.textContent="Сақталуда...";
 
  try{
+
   const id=document.getElementById("managerId").value;
   const file=document.getElementById("photoFile").files[0];
 
   let photoUrl=document.getElementById("photo").value.trim()||null;
 
   if(file){
+
    if(file.size>5*1024*1024){
     alert("Фото көлемі 5 MB-тан аспауы керек");
     return;
@@ -571,27 +772,34 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
    checks:Number(document.getElementById("checks").value)
   };
 
-  const result=id
-   ?await db.from("managers").update(item).eq("id",id)
-   :await db.from("managers").insert(item);
+  const result=id?
+   await db.from("managers").update(item).eq("id",id):
+   await db.from("managers").insert(item);
 
   if(result.error)throw result.error;
 
   resetForm();
+
   await load();
 
   alert("Менеджер сәтті сақталды!");
 
  }catch(error){
+
   alert("Қате: "+error.message);
+
  }finally{
+
   button.disabled=false;
   button.textContent="Сақтау";
  }
 });
 
+// ӨҢДЕУ
 function editManager(id){
+
  const m=managers.find(x=>String(x.id)===String(id));
+
  if(!m)return;
 
  document.getElementById("managerId").value=m.id;
@@ -601,33 +809,46 @@ function editManager(id){
  document.getElementById("plan").value=m.plan;
  document.getElementById("sales").value=m.sales;
  document.getElementById("checks").value=m.checks;
+
  document.getElementById("formTitle").textContent="Менеджерді өңдеу";
- document.getElementById("managerForm").scrollIntoView({behavior:"smooth"});
+
+ document.getElementById("managerForm")
+  .scrollIntoView({behavior:"smooth"});
 }
 
+// ЖОЮ
 async function deleteManager(id){
+
  if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
 
  const {error}=await db.from("managers").delete().eq("id",id);
 
- if(error)alert(error.message);
- else await load();
+ if(error){
+  alert(error.message);
+ }else{
+  await load();
+ }
 }
 
+// TV MODE
 function tvMode(){
+
  document.body.classList.toggle("tv");
+
  document.querySelectorAll(".admin,header button").forEach(x=>
   x.style.display=document.body.classList.contains("tv")?"none":""
  );
+
  document.querySelector(".hero").scrollIntoView();
 }
 
-// REALTIME DATA REFRESH
+// AUTH
 db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
 
+// БАСТАПҚЫ ЖҮКТЕУ
 load();
 
-// Әр 15 секунд сайын рейтингті жаңарту
+// 15 СЕКУНД САЙЫН ЖАҢАРТУ
 setInterval(load,15000);
 
 </script>
