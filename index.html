@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="kk">
 <head>
@@ -88,33 +87,12 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .wheel-pointer{position:absolute;z-index:5;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-top:38px solid #fff0a4;filter:drop-shadow(0 3px 5px #000)}
 .wheel-outer{position:absolute;inset:0;border-radius:50%;padding:9px;background:linear-gradient(135deg,#fff0a8,#a97822,#f5d77d,#805515);box-shadow:0 0 0 3px #30230e,0 0 30px #e8b94c44}
 .wheel-disc{width:100%;height:100%;border-radius:50%;border:4px solid #30230e;position:relative;overflow:hidden;background:#27344a;transition:transform 6s cubic-bezier(.12,.75,.08,1)}
-
-/* FIXED WHEEL LABELS */
-.wheel-label{
- position:absolute;
- display:flex;
- align-items:center;
- justify-content:center;
- transform-origin:center center;
- font-weight:900;
- color:#fff;
- text-shadow:0 2px 5px #000,0 0 8px #000;
- text-align:center;
- white-space:nowrap;
- pointer-events:none;
- z-index:2;
- line-height:1;
-}
-.wheel-label span{
- display:block;
- text-align:center;
- width:100%;
-}
+.wheel-label{position:absolute;display:flex;align-items:center;justify-content:center;transform-origin:center center;font-weight:900;color:#fff;text-shadow:0 2px 5px #000,0 0 8px #000;text-align:center;white-space:nowrap;pointer-events:none;z-index:2;line-height:1}
+.wheel-label span{display:block;text-align:center;width:100%}
 .wheel-label.large{width:75px;font-size:13px}
 .wheel-label.medium{width:58px;font-size:11px}
 .wheel-label.small{width:30px;font-size:13px}
 .wheel-label.tiny{width:20px;font-size:12px}
-
 .wheel-hub{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,#fff0a8,#b78325);border:5px solid #49330d;display:flex;align-items:center;justify-content:center;color:#231807;font-weight:1000;font-size:15px;box-shadow:0 0 15px #0009}
 .wheel-controls{width:100%;max-width:420px}
 .wheel-controls button{width:100%;padding:15px;font-size:16px;letter-spacing:1px}
@@ -136,6 +114,24 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .pin-help{font-size:11px;color:#8291a8;margin-top:-7px;margin-bottom:10px}
 .tv .fortune-panel{display:none}
 
+/* SALES DYNAMICS */
+#salesDynamics{margin:32px 0;overflow:hidden}
+.dynamics-controls{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:15px 0 20px}
+.dynamics-date{flex:1;min-width:145px}
+.dynamics-date label{display:block;margin-bottom:5px;color:#aab5c8;font-size:12px}
+.dynamics-date input{margin:0}
+.dynamics-controls button{height:43px}
+.dynamics-chart-wrap{width:100%;overflow-x:auto;background:#0b1422;border:1px solid #29364c;border-radius:13px;padding:10px}
+#managerDynamicsChart{display:block;width:100%;min-width:750px;height:450px}
+.dynamics-legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:15px}
+.dynamics-legend-item{display:flex;align-items:center;gap:7px;color:#c4cede;font-size:12px}
+.dynamics-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dynamics-status{margin-top:12px;color:#94a1b7;font-size:12px;line-height:1.6}
+.dynamics-summary{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.dynamics-summary-item{background:#101b2c;border:1px solid #29364c;border-radius:10px;padding:10px 13px;flex:1;min-width:130px}
+.dynamics-summary-item small{display:block;color:#94a1b7;font-size:11px}
+.dynamics-summary-item strong{display:block;color:#f2c66d;font-size:17px;margin-top:5px}
+
 @media(max-width:700px){
  .stats{grid-template-columns:1fr 1fr}
  .stat:last-child{grid-column:span 2}
@@ -148,6 +144,8 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
  .fortune-layout{grid-template-columns:1fr}
  .fortune-panel{padding:16px}
  .wheel-wrap{width:min(82vw,350px)}
+ .dynamics-controls{align-items:stretch}
+ .dynamics-controls button{width:100%}
 }
 @media print{button,.admin,.fortune-panel{display:none}}
 </style>
@@ -180,6 +178,48 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 
  <div class="section-title"><h2>📊 ТОЛЫҚ РЕЙТИНГ</h2><span class="muted" id="managerCount">0 менеджер</span></div>
  <div class="ranking" id="ranking"></div>
+
+ <!-- SALES DYNAMICS -->
+ <section class="panel" id="salesDynamics">
+  <div class="section-title">
+   <h2>📈 САТЫЛЫМ ДИНАМИКАСЫ</h2>
+   <span class="muted">DAILY SALES TRACKING</span>
+  </div>
+
+  <div class="dynamics-controls">
+   <div class="dynamics-date">
+    <label for="dynamicsStart">Басталу күні</label>
+    <input type="date" id="dynamicsStart">
+   </div>
+   <div class="dynamics-date">
+    <label for="dynamicsEnd">Аяқталу күні</label>
+    <input type="date" id="dynamicsEnd">
+   </div>
+   <button onclick="applyDynamicsDates()">КӨРСЕТУ</button>
+  </div>
+
+  <div class="dynamics-summary">
+   <div class="dynamics-summary-item">
+    <small>ТАҢДАЛҒАН КЕЗЕҢ</small>
+    <strong id="dynamicsPeriod">—</strong>
+   </div>
+   <div class="dynamics-summary-item">
+    <small>МЕНЕДЖЕРЛЕР</small>
+    <strong id="dynamicsManagerCount">0</strong>
+   </div>
+   <div class="dynamics-summary-item">
+    <small>СОҢҒЫ КӨРСЕТІЛГЕН САТЫЛЫМ</small>
+    <strong id="dynamicsTotalSales">0 ₸</strong>
+   </div>
+  </div>
+
+  <div class="dynamics-chart-wrap">
+   <canvas id="managerDynamicsChart"></canvas>
+  </div>
+
+  <div class="dynamics-legend" id="dynamicsLegend"></div>
+  <div class="dynamics-status" id="dynamicsStatus">Динамика жүктелуде...</div>
+ </section>
 
  <section class="fortune-panel" id="fortunePanel">
   <h2 class="fortune-heading">🎡 DARYN SALES — FORTUNE WHEEL</h2>
@@ -326,6 +366,24 @@ let wheelBusy=false;
 let fortuneUsedByManager={};
 let fortuneHistoryRows=[];
 
+/* SALES DYNAMICS STATE */
+let dynamicsHistory=[];
+let dynamicsImages={};
+let dynamicsStartDate="";
+let dynamicsEndDate="";
+let dynamicsLoading=false;
+
+const dynamicsColors=[
+ "#f2c66d","#48c9b0","#5b9cf6","#e879f9",
+ "#fb7185","#a3e635","#f97316","#22d3ee",
+ "#c084fc","#facc15","#34d399","#f472b6",
+ "#60a5fa","#fb923c","#a78bfa","#4ade80",
+ "#eab308","#2dd4bf","#f87171","#818cf8",
+ "#d946ef","#84cc16","#38bdf8","#fb7185",
+ "#a3a3a3","#f59e0b","#14b8a6","#c084fc",
+ "#f43f5e","#0ea5e9"
+];
+
 const PRIZES=[
  {name:"Gorilla",label:"🥤 Gorilla",probability:25},
  {name:"2000 KZT",label:"2 000 ₸",probability:10},
@@ -367,9 +425,384 @@ const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({
 
 const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
 
+/* DATE HELPERS */
+function localDateString(date){
+ const y=date.getFullYear();
+ const m=String(date.getMonth()+1).padStart(2,"0");
+ const d=String(date.getDate()).padStart(2,"0");
+ return `${y}-${m}-${d}`;
+}
+
+function initializeDynamicsDates(){
+ const today=localDateString(new Date());
+ const firstDay=new Date();
+ firstDay.setDate(1);
+
+ dynamicsStartDate=localDateString(firstDay);
+ dynamicsEndDate=today;
+
+ document.getElementById("dynamicsStart").value=dynamicsStartDate;
+ document.getElementById("dynamicsEnd").value=dynamicsEndDate;
+}
+
+async function applyDynamicsDates(){
+ const start=document.getElementById("dynamicsStart").value;
+ const end=document.getElementById("dynamicsEnd").value;
+
+ if(!start||!end){
+  alert("Басталу және аяқталу күндерін таңда.");
+  return;
+ }
+
+ if(start>end){
+  alert("Басталу күні аяқталу күнінен кейін болмауы керек.");
+  return;
+ }
+
+ dynamicsStartDate=start;
+ dynamicsEndDate=end;
+
+ await loadManagerDynamics();
+}
+
+/* LOAD DAILY SALES HISTORY */
+async function loadManagerDynamics(){
+ const status=document.getElementById("dynamicsStatus");
+ if(!status||dynamicsLoading)return;
+
+ if(!dynamicsStartDate||!dynamicsEndDate)return;
+
+ dynamicsLoading=true;
+ status.textContent="Динамика жүктелуде...";
+
+ try{
+  const {data,error}=await db
+   .from("manager_sales_history")
+   .select("manager_id,manager_name,photo_url,snapshot_date,sales,checks")
+   .gte("snapshot_date",dynamicsStartDate)
+   .lte("snapshot_date",dynamicsEndDate)
+   .order("snapshot_date",{ascending:true});
+
+  if(error)throw error;
+
+  dynamicsHistory=data||[];
+  renderManagerDynamics();
+
+ }catch(error){
+  status.textContent="Динамиканы жүктеу қатесі: "+error.message;
+ }finally{
+  dynamicsLoading=false;
+ }
+}
+
+function dynamicsColor(index){
+ return dynamicsColors[index%dynamicsColors.length];
+}
+
+function loadDynamicsAvatar(manager){
+ const url=photo(manager);
+
+ if(dynamicsImages[url])return dynamicsImages[url];
+
+ const img=new Image();
+ img.crossOrigin="anonymous";
+ dynamicsImages[url]=img;
+
+ img.onload=()=>renderManagerDynamics();
+ img.onerror=()=>renderManagerDynamics();
+ img.src=url;
+
+ return img;
+}
+
+function drawDynamicsAvatar(ctx,img,x,y,color){
+ ctx.save();
+
+ ctx.beginPath();
+ ctx.arc(x,y,17,0,Math.PI*2);
+ ctx.clip();
+
+ if(img&&img.complete&&img.naturalWidth){
+  ctx.drawImage(img,x-17,y-17,34,34);
+ }else{
+  ctx.fillStyle="#26364e";
+  ctx.fillRect(x-17,y-17,34,34);
+  ctx.fillStyle="#fff";
+  ctx.font="bold 13px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText("D",x,y);
+ }
+
+ ctx.restore();
+
+ ctx.beginPath();
+ ctx.arc(x,y,18,0,Math.PI*2);
+ ctx.strokeStyle=color;
+ ctx.lineWidth=3;
+ ctx.stroke();
+}
+
+function renderManagerDynamics(){
+ const canvas=document.getElementById("managerDynamicsChart");
+ const legend=document.getElementById("dynamicsLegend");
+
+ if(!canvas||!legend||!dynamicsStartDate||!dynamicsEndDate)return;
+
+ const rect=canvas.getBoundingClientRect();
+ const width=Math.max(750,rect.width||900);
+ const height=450;
+ const ratio=window.devicePixelRatio||1;
+
+ canvas.width=width*ratio;
+ canvas.height=height*ratio;
+ canvas.style.height=height+"px";
+
+ const ctx=canvas.getContext("2d");
+ ctx.setTransform(ratio,0,0,ratio,0,0);
+ ctx.clearRect(0,0,width,height);
+
+ const left=72;
+ const right=190;
+ const top=40;
+ const bottom=65;
+
+ const chartWidth=width-left-right;
+ const chartHeight=height-top-bottom;
+
+ const start=new Date(dynamicsStartDate+"T00:00:00");
+ const end=new Date(dynamicsEndDate+"T00:00:00");
+
+ const dates=[];
+
+ for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+  dates.push(localDateString(d));
+ }
+
+ if(!dates.length)return;
+
+ const dateCount=dates.length;
+
+ const getX=index=>{
+  return left+(dateCount===1?chartWidth/2:index/(dateCount-1)*chartWidth);
+ };
+
+ const historyByManager={};
+
+ dynamicsHistory.forEach(row=>{
+  const id=String(row.manager_id);
+
+  if(!historyByManager[id]){
+   historyByManager[id]={};
+  }
+
+  historyByManager[id][row.snapshot_date]=Number(row.sales)||0;
+ });
+
+ let maxSales=0;
+
+ Object.values(historyByManager).forEach(days=>{
+  Object.values(days).forEach(value=>{
+   maxSales=Math.max(maxSales,value);
+  });
+ });
+
+ const activeManagers=managers.filter(m=>{
+  return historyByManager[String(m.id)]&&
+   Object.keys(historyByManager[String(m.id)]).length>0;
+ });
+
+ const latestValues=[];
+
+ activeManagers.forEach(manager=>{
+  const days=historyByManager[String(manager.id)];
+  const latestDate=Object.keys(days).sort().pop();
+
+  if(latestDate){
+   latestValues.push({
+    manager,
+    date:latestDate,
+    sales:days[latestDate]
+   });
+  }
+ });
+
+ latestValues.forEach(item=>{
+  maxSales=Math.max(maxSales,item.sales);
+ });
+
+ const yMax=Math.max(100000,Math.ceil(maxSales/100000)*100000);
+
+ const yPos=value=>{
+  return top+chartHeight-(value/yMax)*chartHeight;
+ };
+
+ /* GRID */
+ ctx.font="11px Arial";
+ ctx.textAlign="right";
+ ctx.textBaseline="middle";
+
+ for(let i=0;i<=5;i++){
+  const value=yMax*i/5;
+  const y=yPos(value);
+
+  ctx.beginPath();
+  ctx.moveTo(left,y);
+  ctx.lineTo(width-right,y);
+  ctx.strokeStyle="#26364c";
+  ctx.lineWidth=1;
+  ctx.stroke();
+
+  ctx.fillStyle="#94a1b7";
+
+  const label=value>=1000000?
+   (value/1000000).toFixed(1)+"M":
+   Math.round(value/1000)+"K";
+
+  ctx.fillText(label,left-10,y);
+ }
+
+ /* X AXIS DATE LABELS */
+ ctx.textAlign="center";
+ ctx.textBaseline="top";
+ ctx.fillStyle="#94a1b7";
+ ctx.font="10px Arial";
+
+ const step=Math.max(1,Math.ceil(dateCount/12));
+
+ dates.forEach((date,i)=>{
+  if(i%step!==0&&i!==dateCount-1)return;
+
+  const x=getX(i);
+  ctx.fillText(date.slice(5).replace("-","."),x,height-bottom+17);
+ });
+
+ legend.innerHTML="";
+
+ /* DRAW EACH MANAGER */
+ activeManagers.forEach((manager,index)=>{
+  const id=String(manager.id);
+  const color=dynamicsColor(index);
+  const days=historyByManager[id]||{};
+  const points=[];
+
+  dates.forEach((date,i)=>{
+   if(days[date]===undefined)return;
+
+   points.push({
+    x:getX(i),
+    y:yPos(days[date]),
+    sales:days[date],
+    date
+   });
+  });
+
+  if(!points.length)return;
+
+  /* LINE */
+  ctx.beginPath();
+
+  points.forEach((point,i)=>{
+   if(i===0){
+    ctx.moveTo(point.x,point.y);
+   }else{
+    ctx.lineTo(point.x,point.y);
+   }
+  });
+
+  ctx.strokeStyle=color;
+  ctx.lineWidth=2.5;
+  ctx.lineJoin="round";
+  ctx.lineCap="round";
+  ctx.stroke();
+
+  /* POINTS */
+  points.forEach(point=>{
+   ctx.beginPath();
+   ctx.arc(point.x,point.y,3,0,Math.PI*2);
+   ctx.fillStyle=color;
+   ctx.fill();
+  });
+
+  /* LAST POINT AVATAR + LABEL */
+  const last=points[points.length-1];
+  const img=loadDynamicsAvatar(manager);
+
+  drawDynamicsAvatar(ctx,img,last.x,last.y,color);
+
+  ctx.fillStyle=color;
+  ctx.font="bold 12px Arial";
+  ctx.textAlign="left";
+  ctx.textBaseline="middle";
+
+  const labelX=last.x+25;
+  const labelY=last.y;
+
+  ctx.fillText(manager.name,labelX,labelY-8);
+  ctx.fillStyle="#ffffff";
+  ctx.font="11px Arial";
+  ctx.fillText(money(last.sales),labelX,labelY+8);
+
+  /* LEGEND */
+  const item=document.createElement("div");
+  item.className="dynamics-legend-item";
+
+  const dot=document.createElement("span");
+  dot.className="dynamics-dot";
+  dot.style.background=color;
+
+  const name=document.createElement("span");
+  name.textContent=manager.name;
+
+  item.appendChild(dot);
+  item.appendChild(name);
+  legend.appendChild(item);
+ });
+
+ /* SUMMARY */
+ const lastDate=dates[dates.length-1];
+
+ let totalLatest=0;
+
+ activeManagers.forEach(manager=>{
+  const days=historyByManager[String(manager.id)];
+  const availableDates=Object.keys(days).sort();
+  const lastAvailable=availableDates[availableDates.length-1];
+
+  if(lastAvailable){
+   totalLatest+=Number(days[lastAvailable])||0;
+  }
+ });
+
+ document.getElementById("dynamicsPeriod").textContent=
+  dynamicsStartDate.slice(5)+" — "+dynamicsEndDate.slice(5);
+
+ document.getElementById("dynamicsManagerCount").textContent=
+  activeManagers.length;
+
+ document.getElementById("dynamicsTotalSales").textContent=
+  money(totalLatest);
+
+ if(!dynamicsHistory.length){
+  ctx.fillStyle="#94a1b7";
+  ctx.font="14px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText(
+   "Бұл кезеңде сатылым тарихы әлі жоқ.",
+   width/2,
+   height/2
+  );
+ }
+
+ document.getElementById("dynamicsStatus").textContent=
+  dynamicsHistory.length?
+   `${dynamicsStartDate} — ${dynamicsEndDate} • ${activeManagers.length} менеджер • ${dynamicsHistory.length} күндік жазба`:
+   "Таңдалған кезеңде тарих табылмады. Менеджерлердің сатылымын өзгерткен сайын күндік тарих автоматты түрде жазылады.";
+}
+
 /* FIXED FORTUNE WHEEL LABELS */
 function renderWheelLabels(){
-
  const disc=document.getElementById("wheelDisc");
  if(!disc)return;
 
@@ -383,31 +816,14 @@ function renderWheelLabels(){
  const center=size/2;
 
  const colors=[
-  "#25a56a",
-  "#b78b2c",
-  "#4c84b8",
-  "#bd613f",
-  "#7856a6",
-  "#397d9b",
-  "#568b54",
-  "#d2a8e8",
-  "#6b8196",
-  "#c79b3c",
-  "#4b5362"
+  "#25a56a","#b78b2c","#4c84b8","#bd613f",
+  "#7856a6","#397d9b","#568b54","#d2a8e8",
+  "#6b8196","#c79b3c","#4b5362"
  ];
 
  const labels=[
-  "Gorilla",
-  "2 000 ₸",
-  "Taxi",
-  "Обед",
-  "Кофе",
-  "🎧",
-  "🌴",
-  "💨",
-  "⏱",
-  "5 000",
-  "0 ₸"
+  "Gorilla","2 000 ₸","Taxi","Обед","Кофе",
+  "🎧","🌴","💨","⏱","5 000","0 ₸"
  ];
 
  let cumulative=0;
@@ -416,14 +832,11 @@ function renderWheelLabels(){
  disc.innerHTML="";
 
  PRIZES.forEach((prize,i)=>{
-
   const start=cumulative;
   const probability=prize.probability;
   const end=start+probability;
 
-  gradient.push(
-   `${colors[i]} ${start}% ${end}%`
-  );
+  gradient.push(`${colors[i]} ${start}% ${end}%`);
 
   const middlePercent=start+probability/2;
   const angleDeg=middlePercent*3.6-90;
@@ -431,15 +844,10 @@ function renderWheelLabels(){
 
   let radius;
 
-  if(probability>=15){
-   radius=size*0.29;
-  }else if(probability>=10){
-   radius=size*0.33;
-  }else if(probability>=5){
-   radius=size*0.37;
-  }else{
-   radius=size*0.40;
-  }
+  if(probability>=15)radius=size*0.29;
+  else if(probability>=10)radius=size*0.33;
+  else if(probability>=5)radius=size*0.37;
+  else radius=size*0.40;
 
   const x=center+Math.cos(angleRad)*radius;
   const y=center+Math.sin(angleRad)*radius;
@@ -448,36 +856,25 @@ function renderWheelLabels(){
 
   let sizeClass="tiny";
 
-  if(probability>=15){
-   sizeClass="large";
-  }else if(probability>=10){
-   sizeClass="medium";
-  }else if(probability>=5){
-   sizeClass="small";
-  }
+  if(probability>=15)sizeClass="large";
+  else if(probability>=10)sizeClass="medium";
+  else if(probability>=5)sizeClass="small";
 
   label.className="wheel-label "+sizeClass;
   label.style.left=x+"px";
   label.style.top=y+"px";
-
-  label.style.transform=
-   `translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
-
-  label.innerHTML=
-   `<span>${safe(labels[i])}</span>`;
+  label.style.transform=`translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
+  label.innerHTML=`<span>${safe(labels[i])}</span>`;
 
   disc.appendChild(label);
-
   cumulative=end;
  });
 
- disc.style.background=
-  `conic-gradient(from -90deg,${gradient.join(",")})`;
+ disc.style.background=`conic-gradient(from -90deg,${gradient.join(",")})`;
 }
 
 /* PRIZE LIST */
 function renderPrizeList(){
-
  const list=document.getElementById("prizeList");
 
  list.innerHTML=PRIZES.map((p,i)=>`
@@ -490,7 +887,6 @@ function renderPrizeList(){
 
 /* LOAD DATA */
 async function load(){
-
  const {data,error}=await db
   .from("managers")
   .select("*")
@@ -529,10 +925,12 @@ async function load(){
 
  await loadFortuneHistory();
  updateSpinAvailability();
+
+ /* REFRESH SALES DYNAMICS */
+ await loadManagerDynamics();
 }
 
 function render(){
-
  const sorted=[...managers].sort(
   (a,b)=>Number(b.sales||0)-Number(a.sales||0)
  );
@@ -545,8 +943,7 @@ function render(){
  document.getElementById("totalChecks").textContent=checks;
  document.getElementById("totalPercent").textContent=pct(sales,plans)+"%";
 
- document.getElementById("managerCount").textContent=
-  sorted.length+" менеджер";
+ document.getElementById("managerCount").textContent=sorted.length+" менеджер";
 
  document.getElementById("topFive").innerHTML=
   sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
@@ -566,16 +963,16 @@ function render(){
     <button class="danger" onclick="deleteManager('${safe(m.id)}')">Жою</button>
    </div>
   `).join(""):"";
+
+ renderManagerDynamics();
 }
 
 function card(m,i,top){
-
  const p=pct(Number(m.sales||0),Number(m.plan||0));
  const isLeader=i===0;
 
  return `
   <div class="${top?'manager '+(isLeader?'first':''):'rank-row'}">
-
    <div class="${top?'rank':''}">
     ${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}
    </div>
@@ -585,9 +982,7 @@ function card(m,i,top){
     onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
 
    <div class="${top?'':'info'}">
-
     ${isLeader?'<div class="leader-crown">👑</div>':''}
-
     <h3>${safe(m.name)}</h3>
     <div class="amount">${money(m.sales)}</div>
     <div class="muted">${Number(m.checks||0)} чек</div>
@@ -595,16 +990,11 @@ function card(m,i,top){
 
    <div style="${top?'':'min-width:100px;text-align:right'}">
     <strong style="color:#f2c66d">${p}%</strong>
-
-    <div class="progress">
-     <div style="width:${Math.min(p,100)}%"></div>
-    </div>
-
+    <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
     <div class="details">
      <span>${top?'':'Жоспар'}</span>
      <span>${money(m.plan)}</span>
     </div>
-
     <div class="details">
      <span>Қалды</span>
      <span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span>
@@ -616,7 +1006,6 @@ function card(m,i,top){
 
 /* CHAMPION ANIMATION */
 function celebrateChampion(manager){
-
  const overlay=document.getElementById("championOverlay");
 
  document.getElementById("championName").textContent=manager.name;
@@ -639,7 +1028,6 @@ function celebrateChampion(manager){
 let particles=[];
 
 function startConfetti(){
-
  stopConfetti();
 
  const canvas=document.getElementById("confettiCanvas");
@@ -647,7 +1035,6 @@ function startConfetti(){
 
  canvas.width=window.innerWidth*devicePixelRatio;
  canvas.height=window.innerHeight*devicePixelRatio;
-
  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 
  const w=window.innerWidth;
@@ -656,26 +1043,18 @@ function startConfetti(){
  particles=[];
 
  const colors=[
-  "#ffd76b",
-  "#ffffff",
-  "#e5a92e",
-  "#f7c84c",
-  "#f5e6ad",
-  "#d88c20",
-  "#ff8c42"
+  "#ffd76b","#ffffff","#e5a92e","#f7c84c",
+  "#f5e6ad","#d88c20","#ff8c42"
  ];
 
  for(let side=0;side<2;side++){
-
   for(let i=0;i<110;i++){
-
    const x=side===0?
     Math.random()*w*.25:
     w-w*.25+Math.random()*w*.25;
 
    particles.push({
-    x,
-    y:h*.65+Math.random()*h*.25,
+    x,y:h*.65+Math.random()*h*.25,
     vx:(side===0?1:-1)*(Math.random()*8+2)+(Math.random()-.5)*3,
     vy:-(Math.random()*15+5),
     gravity:.16+Math.random()*.13,
@@ -690,7 +1069,6 @@ function startConfetti(){
  }
 
  for(let i=0;i<130;i++){
-
   particles.push({
    x:Math.random()*w,
    y:-Math.random()*h,
@@ -710,7 +1088,6 @@ function startConfetti(){
 }
 
 function drawConfetti(){
-
  const canvas=document.getElementById("confettiCanvas");
  const ctx=canvas.getContext("2d");
 
@@ -722,7 +1099,6 @@ function drawConfetti(){
  particles=particles.filter(p=>p.life>0&&p.y<h+40);
 
  particles.forEach(p=>{
-
   p.x+=p.vx;
   p.y+=p.vy;
   p.vy+=p.gravity;
@@ -755,7 +1131,6 @@ function drawConfetti(){
 }
 
 function stopConfetti(){
-
  if(confettiAnimation){
   cancelAnimationFrame(confettiAnimation);
   confettiAnimation=null;
@@ -773,17 +1148,13 @@ function stopConfetti(){
 
 /* ROP AUTH */
 async function login(){
-
  const email=prompt("РОП email:");
  if(!email)return;
 
  const password=prompt("Құпиясөз:");
  if(!password)return;
 
- const {error}=await db.auth.signInWithPassword({
-  email,
-  password
- });
+ const {error}=await db.auth.signInWithPassword({email,password});
 
  if(error){
   alert(error.message);
@@ -794,21 +1165,16 @@ async function login(){
 }
 
 async function checkROP(){
-
  const {data:{user}}=await db.auth.getUser();
 
  if(!user){
-
   isROP=false;
-
   document.getElementById("adminPanel").classList.add("hidden");
   document.body.classList.remove("rop-view");
-
   renderPrizeList();
   renderFortuneHistoryVisibility();
   renderFortuneHistory();
   render();
-
   return;
  }
 
@@ -821,9 +1187,7 @@ async function checkROP(){
  isROP=!!data&&!error;
 
  document.body.classList.toggle("rop-view",isROP);
-
- document.getElementById("adminPanel")
-  .classList.toggle("hidden",!isROP);
+ document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
 
  if(!isROP){
   alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
@@ -836,13 +1200,10 @@ async function checkROP(){
 }
 
 async function logout(){
-
  await db.auth.signOut();
 
  isROP=false;
-
  document.body.classList.remove("rop-view");
-
  document.getElementById("adminPanel").classList.add("hidden");
 
  renderPrizeList();
@@ -852,47 +1213,33 @@ async function logout(){
 }
 
 function renderFortuneHistoryVisibility(){
-
  document.getElementById("probabilityHeader")
   .classList.toggle("hidden",!isROP);
 }
 
 function renderFortuneHistory(){
-
  const body=document.getElementById("fortuneHistory");
  const colspan=isROP?5:4;
 
  if(!fortuneHistoryRows.length){
-
   body.innerHTML=
    `<tr><td colspan="${colspan}" class="muted">Әзірге ұтыс болған жоқ.</td></tr>`;
-
   return;
  }
 
  body.innerHTML=fortuneHistoryRows.map(r=>`
-
   <tr>
    <td>${safe(r.manager_name||"Менеджер")}</td>
    <td>${safe(r.prize)}</td>
-
    ${isROP?`<td>${Number(r.probability)||0}%</td>`:""}
-
    <td>#${Number(r.spin_number)||1}</td>
-
-   <td>
-    ${r.created_at?
-     new Date(r.created_at).toLocaleString("kk-KZ"):
-     "—"}
-   </td>
+   <td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td>
   </tr>
-
  `).join("");
 }
 
 /* MANAGER FORM */
 function resetForm(){
-
  document.getElementById("managerForm").reset();
  document.getElementById("managerId").value="";
  document.getElementById("formTitle").textContent="Менеджер қосу";
@@ -900,13 +1247,10 @@ function resetForm(){
 
 /* PHOTO UPLOAD */
 async function uploadManagerPhoto(file){
-
  if(!file)return null;
 
  const ext=file.name.split(".").pop().toLowerCase();
-
- const fileName=
-  `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+ const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
  const {error}=await db.storage
   .from("manager-photos")
@@ -922,20 +1266,16 @@ async function uploadManagerPhoto(file){
 }
 
 /* SAVE MANAGER + PIN */
-document.getElementById("managerForm")
- .addEventListener("submit",async e=>{
-
+document.getElementById("managerForm").addEventListener("submit",async e=>{
  e.preventDefault();
 
  if(!isROP)return alert("Рұқсат жоқ");
 
  const button=e.submitter;
-
  button.disabled=true;
  button.textContent="Сақталуда...";
 
  try{
-
   const id=document.getElementById("managerId").value;
   const pin=document.getElementById("managerPin").value.trim();
 
@@ -948,12 +1288,9 @@ document.getElementById("managerForm")
   }
 
   const file=document.getElementById("photoFile").files[0];
-
-  let photoUrl=
-   document.getElementById("photo").value.trim()||null;
+  let photoUrl=document.getElementById("photo").value.trim()||null;
 
   if(file){
-
    if(file.size>5*1024*1024){
     throw new Error("Фото көлемі 5 MB-тан аспауы керек.");
    }
@@ -976,7 +1313,6 @@ document.getElementById("managerForm")
   let saved;
 
   if(id){
-
    const {data,error}=await db
     .from("managers")
     .update(item)
@@ -985,11 +1321,8 @@ document.getElementById("managerForm")
     .single();
 
    if(error)throw error;
-
    saved=data;
-
   }else{
-
    const {data,error}=await db
     .from("managers")
     .insert(item)
@@ -997,47 +1330,34 @@ document.getElementById("managerForm")
     .single();
 
    if(error)throw error;
-
    saved=data;
   }
 
   if(pin){
-
    const {error}=await db.rpc("set_manager_fortune_pin",{
     p_manager_id:String(saved.id),
     p_pin:pin
    });
 
    if(error){
-    throw new Error(
-     "Менеджер сақталды, бірақ PIN орнатылмады: "+error.message
-    );
+    throw new Error("Менеджер сақталды, бірақ PIN орнатылмады: "+error.message);
    }
   }
 
   resetForm();
-
   await load();
 
-  alert(
-   pin?
-   "Менеджер және PIN сәтті сақталды!":
-   "Менеджер сәтті сақталды!"
-  );
+  alert(pin?"Менеджер және PIN сәтті сақталды!":"Менеджер сәтті сақталды!");
 
  }catch(error){
-
   alert("Қате: "+error.message);
-
  }finally{
-
   button.disabled=false;
   button.textContent="Сақтау";
  }
 });
 
 function editManager(id){
-
  const m=managers.find(x=>String(x.id)===String(id));
  if(!m)return;
 
@@ -1049,21 +1369,15 @@ function editManager(id){
  document.getElementById("sales").value=m.sales;
  document.getElementById("checks").value=m.checks;
  document.getElementById("managerPin").value="";
-
  document.getElementById("formTitle").textContent="Менеджерді өңдеу";
 
- document.getElementById("managerForm")
-  .scrollIntoView({behavior:"smooth"});
+ document.getElementById("managerForm").scrollIntoView({behavior:"smooth"});
 }
 
 async function deleteManager(id){
-
  if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
 
- const {error}=await db
-  .from("managers")
-  .delete()
-  .eq("id",id);
+ const {error}=await db.from("managers").delete().eq("id",id);
 
  if(error){
   alert(error.message);
@@ -1074,7 +1388,6 @@ async function deleteManager(id){
 
 /* FORTUNE WHEEL MANAGERS */
 function refreshFortuneManagerOptions(){
-
  const select=document.getElementById("fortuneManager");
  const selected=select.value;
 
@@ -1082,9 +1395,8 @@ function refreshFortuneManagerOptions(){
   '<option value="">Менеджерді таңда...</option>'+
   [...managers]
    .sort((a,b)=>String(a.name).localeCompare(String(b.name),"kk"))
-   .map(m=>`
-    <option value="${safe(m.id)}">${safe(m.name)}</option>
-   `).join("");
+   .map(m=>`<option value="${safe(m.id)}">${safe(m.name)}</option>`)
+   .join("");
 
  if(managers.some(m=>String(m.id)===selected)){
   select.value=selected;
@@ -1092,90 +1404,64 @@ function refreshFortuneManagerOptions(){
 }
 
 function getSelectedManager(){
-
  return managers.find(
   m=>String(m.id)===document.getElementById("fortuneManager").value
  );
 }
 
 function updateSpinAvailability(){
-
  const manager=getSelectedManager();
  const pin=document.getElementById("fortunePin").value.trim();
  const button=document.getElementById("spinButton");
 
  if(!manager){
-
-  document.getElementById("availableSpins").textContent=
-   "— айналдыру";
-
-  document.getElementById("spinProgress").textContent=
-   "Менеджер таңдалмаған";
-
+  document.getElementById("availableSpins").textContent="— айналдыру";
+  document.getElementById("spinProgress").textContent="Менеджер таңдалмаған";
   button.disabled=true;
-
   return;
  }
 
- const earned=Math.floor(
-  Math.max(0,Number(manager.sales)||0)/1000000
- );
-
+ const earned=Math.floor(Math.max(0,Number(manager.sales)||0)/1000000);
  const used=fortuneUsedByManager[String(manager.id)]||0;
-
  const remaining=Math.max(0,earned-used);
 
- document.getElementById("availableSpins").textContent=
-  remaining+" айналдыру";
+ document.getElementById("availableSpins").textContent=remaining+" айналдыру";
 
  document.getElementById("spinProgress").textContent=
   `Сатылым: ${money(manager.sales)} • Қолданылғаны: ${used} • Жиналғаны: ${earned}`;
 
- button.disabled=
-  wheelBusy||
-  remaining<=0||
-  !/^\d{4}$/.test(pin);
+ button.disabled=wheelBusy||remaining<=0||!/^\d{4}$/.test(pin);
 }
 
 /* MANAGER SELECTION */
-document.getElementById("fortuneManager")
- .addEventListener("change",()=>{
-
+document.getElementById("fortuneManager").addEventListener("change",()=>{
  document.getElementById("spinResult").innerHTML=
   '<strong>Сәттілік серік болсын!</strong><span>PIN енгізіп, айналдыруды баста.</span>';
 
  updateSpinAvailability();
 });
 
-document.getElementById("fortunePin")
- .addEventListener("input",updateSpinAvailability);
+document.getElementById("fortunePin").addEventListener("input",updateSpinAvailability);
 
 /* FORTUNE HISTORY */
 async function loadFortuneHistory(){
-
  const body=document.getElementById("fortuneHistory");
 
  const {data,error}=await db.rpc("get_fortune_history");
 
  if(error){
-
   body.innerHTML=
    `<tr><td colspan="${isROP?5:4}" class="muted">Тарих жүктелмеді: ${safe(error.message)}</td></tr>`;
-
   return;
  }
 
  const rows=Array.isArray(data)?data:[];
-
  fortuneHistoryRows=rows;
  fortuneUsedByManager={};
 
  rows.forEach(r=>{
-
   const key=String(r.manager_id);
-
-  fortuneUsedByManager[key]=
-   (fortuneUsedByManager[key]||0)+1;
+  fortuneUsedByManager[key]=(fortuneUsedByManager[key]||0)+1;
  });
 
  renderFortuneHistory();
@@ -1183,7 +1469,6 @@ async function loadFortuneHistory(){
 }
 
 function normalizePrizeName(value){
-
  const s=String(value||"").toLowerCase().trim();
 
  if(s.includes("gorilla")||s.includes("горилл"))return "Gorilla";
@@ -1203,38 +1488,22 @@ function normalizePrizeName(value){
 
 /* WHEEL ANIMATION */
 function animateWheel(prizeName){
-
- const prize=PRIZES.find(
-  p=>p.name===normalizePrizeName(prizeName)
- );
-
+ const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));
  if(!prize)return Promise.resolve();
 
  const index=PRIZES.indexOf(prize);
-
- const before=PRIZES
-  .slice(0,index)
-  .reduce((sum,p)=>sum+p.probability,0);
-
+ const before=PRIZES.slice(0,index).reduce((sum,p)=>sum+p.probability,0);
  const center=(before+prize.probability/2)*3.6;
 
  const disc=document.getElementById("wheelDisc");
-
  const current=Number(disc.dataset.rotation||0);
-
  const normalized=((current%360)+360)%360;
-
  const targetMod=(360-center+360)%360;
-
  const delta=(targetMod-normalized+360)%360;
-
  const finalRotation=current+360*7+delta;
 
- disc.style.transition=
-  "transform 6s cubic-bezier(.12,.75,.08,1)";
-
+ disc.style.transition="transform 6s cubic-bezier(.12,.75,.08,1)";
  disc.style.transform=`rotate(${finalRotation}deg)`;
-
  disc.dataset.rotation=String(finalRotation);
 
  return new Promise(resolve=>setTimeout(resolve,6250));
@@ -1242,30 +1511,24 @@ function animateWheel(prizeName){
 
 /* SPIN */
 async function spinFortune(){
-
  if(wheelBusy)return;
 
  const manager=getSelectedManager();
-
  const pin=document.getElementById("fortunePin").value.trim();
 
  if(!manager)return alert("Алдымен менеджерді таңда.");
-
  if(!/^\d{4}$/.test(pin))return alert("4 таңбалы PIN енгіз.");
 
  wheelBusy=true;
-
  updateSpinAvailability();
 
  const button=document.getElementById("spinButton");
-
  button.textContent="ДӨҢГЕЛЕК АЙНАЛЫП ЖАТЫР...";
 
  document.getElementById("spinResult").innerHTML=
   "<strong>🍀 Сәттілік!</strong><span>Нәтиже серверден расталып жатыр...</span>";
 
  try{
-
   const {data,error}=await db.rpc("spin_daryn_fortune",{
    p_manager_id:String(manager.id),
    p_pin:pin
@@ -1274,26 +1537,19 @@ async function spinFortune(){
   if(error)throw error;
 
   const result=Array.isArray(data)?data[0]:data;
-
   if(!result)throw new Error("Серверден бос нәтиже келді.");
-
   if(result.error)throw new Error(result.error);
 
   const prizeName=result.prize??result.result??result.name;
 
-  if(!prizeName){
-   throw new Error("Сервер жауабында ұтыс атауы жоқ.");
-  }
+  if(!prizeName)throw new Error("Сервер жауабында ұтыс атауы жоқ.");
 
   await animateWheel(prizeName);
 
-  const prize=PRIZES.find(
-   p=>p.name===normalizePrizeName(prizeName)
-  );
+  const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));
 
   const probabilityInfo=isROP?
-   `Ықтималдық: ${Number(result.probability)||0}% • `:
-   "";
+   `Ықтималдық: ${Number(result.probability)||0}% • `:"";
 
   document.getElementById("spinResult").innerHTML=`
    <strong>${safe(prize?prize.label:String(prizeName))}</strong>
@@ -1301,29 +1557,22 @@ async function spinFortune(){
   `;
 
   document.getElementById("fortunePin").value="";
-
   await loadFortuneHistory();
 
  }catch(error){
-
   document.getElementById("spinResult").innerHTML=
    `<strong>Айналдыру орындалмады</strong><span>${safe(error.message||"Белгісіз қате")}</span>`;
 
   alert("Қате: "+(error.message||"Айналдыру орындалмады"));
-
  }finally{
-
   wheelBusy=false;
-
   button.textContent="🎡 АЙНАЛДЫРУ";
-
   updateSpinAvailability();
  }
 }
 
 /* TV MODE */
 function tvMode(){
-
  document.body.classList.toggle("tv");
 
  document.querySelectorAll(".admin,header button").forEach(x=>{
@@ -1336,6 +1585,7 @@ function tvMode(){
 /* AUTH + INITIAL LOAD */
 db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
 
+initializeDynamicsDates();
 renderWheelLabels();
 renderPrizeList();
 load();
@@ -1343,12 +1593,15 @@ checkROP();
 
 setInterval(load,15000);
 
-/* WHEEL RESIZE */
+/* RESIZE */
 let wheelResizeTimer;
 
 window.addEventListener("resize",()=>{
  clearTimeout(wheelResizeTimer);
- wheelResizeTimer=setTimeout(renderWheelLabels,150);
+ wheelResizeTimer=setTimeout(()=>{
+  renderWheelLabels();
+  renderManagerDynamics();
+ },150);
 });
 </script>
 </body>
