@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="kk">
 <head>
@@ -6,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DARYN | Sales League</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}
@@ -51,8 +49,6 @@ label{font-size:12px;color:#aab5c8}
 .hidden{display:none!important}
 footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 #notice{color:#f2c66d;font-size:13px;margin:10px 0}
-
-/* CHAMPION CROWN */
 .leader-crown{display:block;font-size:38px;line-height:1;margin-bottom:7px;filter:drop-shadow(0 0 8px #ffd34e);animation:crownFloat 1.8s ease-in-out infinite,crownGlow 2s ease-in-out infinite}
 .manager.first .leader-crown{font-size:45px}
 .rank-row .leader-crown{font-size:27px;margin-bottom:4px;text-align:left}
@@ -60,8 +56,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 @keyframes crownGlow{0%,100%{filter:drop-shadow(0 0 5px #ffd34e)}50%{filter:drop-shadow(0 0 18px #fff0a0) drop-shadow(0 0 30px #ffb52d)}}
 .manager.first::after{content:"✦";position:absolute;right:15px;top:15px;color:#ffe28b;animation:sparkle 2s infinite}
 @keyframes sparkle{0%,100%{opacity:.2;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.3) rotate(90deg)}}
-
-/* CHAMPION OVERLAY */
 #championOverlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#33240b 0%,#111522 48%,#03050b 100%);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s,visibility .4s;overflow:hidden}
 #championOverlay.active{opacity:1;visibility:visible}
 #confettiCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -78,8 +72,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 @keyframes championEnter{0%{transform:scale(.45) translateY(50px);opacity:0}65%{transform:scale(1.08) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
 @keyframes crownBounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-13px) rotate(5deg)}}
 @keyframes photoGlow{from{box-shadow:0 0 20px #ffce58,0 0 35px #ffb52d55}to{box-shadow:0 0 35px #ffce58,0 0 85px #ffb52d}}
-
-/* FORTUNE WHEEL */
 .fortune-panel{margin:32px 0;background:linear-gradient(145deg,#1b2940,#0d1523);border:1px solid #5a4827;border-radius:20px;padding:22px;box-shadow:0 0 35px #d6a64212}
 .fortune-heading{text-align:center;margin:4px 0 8px;color:#f4cc75;font-size:clamp(22px,4vw,30px);letter-spacing:2px}
 .fortune-sub{text-align:center;color:#91a0b7;font-size:12px;letter-spacing:2px;margin-bottom:20px}
@@ -115,8 +107,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .history-scroll{overflow-x:auto}
 .pin-help{font-size:11px;color:#8291a8;margin-top:-7px;margin-bottom:10px}
 .tv .fortune-panel{display:none}
-
-/* SALES DYNAMICS */
 #salesDynamics{margin:32px 0;overflow:hidden}
 .dynamics-controls{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:15px 0 20px}
 .dynamics-date{flex:1;min-width:145px}
@@ -133,26 +123,19 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .dynamics-summary-item{background:#101b2c;border:1px solid #29364c;border-radius:10px;padding:10px 13px;flex:1;min-width:130px}
 .dynamics-summary-item small{display:block;color:#94a1b7;font-size:11px}
 .dynamics-summary-item strong{display:block;color:#f2c66d;font-size:17px;margin-top:5px}
-
 @media(max-width:700px){
- .stats{grid-template-columns:1fr 1fr}
- .stat:last-child{grid-column:span 2}
- .form-grid{grid-template-columns:1fr}
- .container{padding:18px 4%}
+ .stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:span 2}
+ .form-grid{grid-template-columns:1fr}.container{padding:18px 4%}
  .champion-photo-wrap{width:135px;height:135px}
  .rank-row{gap:8px;padding:10px;flex-wrap:wrap}
- .rank-row .avatar{width:43px;height:43px}
- .rank-row .details{font-size:10px}
- .fortune-layout{grid-template-columns:1fr}
- .fortune-panel{padding:16px}
+ .rank-row .avatar{width:43px;height:43px}.rank-row .details{font-size:10px}
+ .fortune-layout{grid-template-columns:1fr}.fortune-panel{padding:16px}
  .wheel-wrap{width:min(82vw,350px)}
- .dynamics-controls{align-items:stretch}
- .dynamics-controls button{width:100%}
+ .dynamics-controls{align-items:stretch}.dynamics-controls button{width:100%}
 }
 @media print{button,.admin,.fortune-panel{display:none}}
 </style>
 </head>
-
 <body>
 <header>
  <div class="logo">DARYN.</div>
@@ -177,24 +160,14 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 
  <div class="section-title"><h2>🏆 TOP 5 MANAGERS</h2><span class="muted">ҮЗДІКТЕР</span></div>
  <div class="top-grid" id="topFive"></div>
-
  <div class="section-title"><h2>📊 ТОЛЫҚ РЕЙТИНГ</h2><span class="muted" id="managerCount">0 менеджер</span></div>
  <div class="ranking" id="ranking"></div>
 
  <section class="panel" id="salesDynamics">
-  <div class="section-title">
-   <h2>📈 САТЫЛЫМ ДИНАМИКАСЫ</h2>
-   <span class="muted">DAILY SALES TRACKING</span>
-  </div>
+  <div class="section-title"><h2>📈 САТЫЛЫМ ДИНАМИКАСЫ</h2><span class="muted">DAILY SALES TRACKING</span></div>
   <div class="dynamics-controls">
-   <div class="dynamics-date">
-    <label for="dynamicsStart">Басталу күні</label>
-    <input type="date" id="dynamicsStart">
-   </div>
-   <div class="dynamics-date">
-    <label for="dynamicsEnd">Аяқталу күні</label>
-    <input type="date" id="dynamicsEnd">
-   </div>
+   <div class="dynamics-date"><label for="dynamicsStart">Басталу күні</label><input type="date" id="dynamicsStart"></div>
+   <div class="dynamics-date"><label for="dynamicsEnd">Аяқталу күні</label><input type="date" id="dynamicsEnd"></div>
    <button onclick="applyDynamicsDates()">КӨРСЕТУ</button>
   </div>
   <div class="dynamics-summary">
@@ -207,6 +180,7 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
   <div class="dynamics-status" id="dynamicsStatus">Динамика жүктелуде...</div>
  </section>
 
+ <!-- 1-ДӨҢГЕЛЕК: ӘР 1 МЛН ₸ САТЫЛЫМҒА 1 АЙНАЛЫМ -->
  <section class="fortune-panel" id="fortunePanel">
   <h2 class="fortune-heading">🎡 DARYN SALES — FORTUNE WHEEL</h2>
   <div class="fortune-sub">ӘР 1 000 000 ₸ САТЫЛЫМҒА — 1 МҮМКІНДІК</div>
@@ -245,33 +219,64 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
   </div>
  </section>
 
- <section class="panel admin hidden" id="adminPanel">
-  <div class="section-title">
-   <h2>⚙️ РОП БАСҚАРУ ПАНЕЛІ</h2>
-   <button class="secondary" onclick="logout()">Шығу</button>
+ <!-- 2-ДӨҢГЕЛЕК: ӘР ЧЕККЕ 1 АЙНАЛЫМ -->
+ <section class="fortune-panel" id="checkFortunePanel">
+  <h2 class="fortune-heading">🎁 DARYN CHECK — BONUS WHEEL</h2>
+  <div class="fortune-sub">ӘР 1 ЧЕККЕ — 1 АЙНАЛЫМ • 15 СЫЙЛЫҚ</div>
+  <div class="fortune-layout">
+   <div class="wheel-area">
+    <div class="wheel-wrap">
+     <div class="wheel-pointer"></div>
+     <div class="wheel-outer"><div class="wheel-disc" id="checkWheelDisc"></div></div>
+     <div class="wheel-hub">DARYN</div>
+    </div>
+    <div class="wheel-controls">
+     <label for="checkFortuneManager">Менеджерді таңда</label>
+     <select id="checkFortuneManager"><option value="">Менеджерді таңда...</option></select>
+     <label for="checkFortunePin">Жеке 4 таңбалы PIN</label>
+     <input id="checkFortunePin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+     <button id="spinCheckButton" onclick="spinCheckFortune()" disabled>🎁 АЙНАЛДЫРУ</button>
+     <div class="spin-result" id="checkSpinResult"><strong>Сәттілік серік болсын!</strong><span>Менеджерді таңдап, PIN енгіз.</span></div>
+    </div>
+   </div>
+   <div class="wheel-info">
+    <h3>СЕНІҢ ЧЕК МҮМКІНДІГІҢ</h3>
+    <div class="muted">Әр тіркелген чек үшін бір рет айналдыруға болады.</div>
+    <div class="spin-count" id="checkAvailableSpins">— айналдыру</div>
+    <div class="muted" id="checkSpinProgress">Менеджер таңдалмаған</div>
+    <div class="prize-list" id="checkPrizeList"></div>
+   </div>
   </div>
+  <div class="history-wrap">
+   <div class="section-title"><h3>🎁 ЧЕК БОЙЫНША ҰТЫСТАР</h3><span class="muted">CHECK WHEEL HISTORY</span></div>
+   <div class="history-scroll">
+    <table class="history-table">
+     <thead><tr><th>Менеджер</th><th>Ұтыс</th><th id="checkProbabilityHeader" class="hidden">Ықтималдық</th><th>Айналым</th><th>Күні</th></tr></thead>
+     <tbody id="checkFortuneHistory"><tr><td colspan="5" class="muted">Тарих жүктелуде...</td></tr></tbody>
+    </table>
+   </div>
+  </div>
+ </section>
+
+ <section class="panel admin hidden" id="adminPanel">
+  <div class="section-title"><h2>⚙️ РОП БАСҚАРУ ПАНЕЛІ</h2><button class="secondary" onclick="logout()">Шығу</button></div>
   <div id="notice"></div>
   <h3 id="formTitle">Менеджер қосу</h3>
   <form id="managerForm">
    <input type="hidden" id="managerId">
-   <label>Менеджер аты</label>
-   <input id="name" required placeholder="Мысалы: Айдос">
-   <label>Фото URL</label>
-   <input id="photo" placeholder="Фото сілтемесі">
-   <label>Галереядан фото жүктеу</label>
-   <input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp">
+   <label>Менеджер аты</label><input id="name" required placeholder="Мысалы: Айдос">
+   <label>Фото URL</label><input id="photo" placeholder="Фото сілтемесі">
+   <label>Галереядан фото жүктеу</label><input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp">
    <div class="form-grid">
     <div><label>Жоспар (₸)</label><input id="plan" type="number" min="0" required></div>
     <div><label>Сатылым (₸)</label><input id="sales" type="number" min="0" required></div>
    </div>
-   <label>Чек саны</label>
-   <input id="checks" type="number" min="0" required>
+   <label>Чек саны</label><input id="checks" type="number" min="0" required>
    <label>Менеджердің 4 таңбалы PIN-коды</label>
    <input id="managerPin" type="password" inputmode="numeric" maxlength="4" placeholder="Жаңа менеджерге міндетті" autocomplete="new-password">
    <div class="pin-help">Жаңа менеджерге PIN міндетті. Өңдеу кезінде бос қалдырсаң, бұрынғы PIN өзгермейді.</div>
    <div class="actions">
-    <button type="submit">Сақтау</button>
-    <button type="button" class="secondary" onclick="resetForm()">Тазалау</button>
+    <button type="submit">Сақтау</button><button type="button" class="secondary" onclick="resetForm()">Тазалау</button>
    </div>
   </form>
   <div class="section-title"><h3>Менеджерлерді басқару</h3></div>
@@ -299,20 +304,11 @@ const SUPABASE_URL="https://bvydfvsmglnnezkodsgz.supabase.co";
 const SUPABASE_KEY="sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let managers=[];
-let isROP=false;
-let previousLeaderId=null;
-let hasLoadedOnce=false;
-let celebrationTimer=null;
-let confettiAnimation=null;
-let wheelBusy=false;
-let fortuneUsedByManager={};
-let fortuneHistoryRows=[];
-let dynamicsHistory=[];
-let dynamicsImages={};
-let dynamicsStartDate="";
-let dynamicsEndDate="";
-let dynamicsLoading=false;
+let managers=[],isROP=false,previousLeaderId=null,hasLoadedOnce=false;
+let celebrationTimer=null,confettiAnimation=null,wheelBusy=false;
+let fortuneUsedByManager={},fortuneHistoryRows=[];
+let checkWheelBusy=false,checkFortuneUsedByManager={},checkFortuneHistoryRows=[];
+let dynamicsHistory=[],dynamicsImages={},dynamicsStartDate="",dynamicsEndDate="",dynamicsLoading=false;
 
 const dynamicsColors=["#f2c66d","#48c9b0","#5b9cf6","#e879f9","#fb7185","#a3e635","#f97316","#22d3ee","#c084fc","#facc15","#34d399","#f472b6","#60a5fa","#fb923c","#a78bfa","#4ade80","#eab308","#2dd4bf","#f87171","#818cf8","#d946ef","#84cc16","#38bdf8","#fb7185","#a3a3a3","#f59e0b","#14b8a6","#c084fc","#f43f5e","#0ea5e9"];
 
@@ -329,8 +325,27 @@ const PRIZES=[
  {name:"5000 KZT",label:"5 000 ₸",probability:4},
  {name:"0 KZT",label:"0 ₸",probability:10}
 ];
-
 const PRIZE_LIST_LABELS=["🥤 Gorilla","💸 2 000 ₸","🚕 Такси","🍔 Обед","☕ Кофе","🎧 AirPods","🌴 1 күн демалыс","💨 Dyson","⏳ 1 сағат демалыс","💰 5 000 ₸","🥲 0 ₸"];
+
+const CHECK_PRIZES=[
+ {name:"Gorilla",label:"🥤 Gorilla",wheel:"Gorilla"},
+ {name:"Бір күндік демалыс",label:"🌴 Бір күндік демалыс",wheel:"1 күн демалыс"},
+ {name:"Кофе",label:"☕ Кофе",wheel:"Кофе"},
+ {name:"Шоколад",label:"🍫 Шоколад",wheel:"Шоколад"},
+ {name:"Такси",label:"🚕 Такси",wheel:"Такси"},
+ {name:"Киноға билет",label:"🎬 Киноға билет",wheel:"Кино билеті"},
+ {name:"Баханди",label:"🍔 Баханди",wheel:"Баханди"},
+ {name:"Арасынан қалағаныңды таңда",label:"🎁 Қалағаныңды таңда",wheel:"Таңда"},
+ {name:"Чекті 8% алады",label:"💸 Чекті 8% алады",wheel:"Чек 8%"},
+ {name:"2000 тг бонус",label:"💰 2 000 тг бонус",wheel:"2 000 ₸"},
+ {name:"1000 тг бонус",label:"💰 1 000 тг бонус",wheel:"1 000 ₸"},
+ {name:"Келесі чекке +2000 бонус",label:"➕ Келесі чекке +2 000",wheel:"+2 000"},
+ {name:"1 сағатқа ерте қайту",label:"⏰ 1 сағат ерте қайту",wheel:"Ерте қайту"},
+ {name:"Қайта айналдыру",label:"🔄 Қайта айналдыру",wheel:"Қайта айнал"},
+ {name:"Бір рет «штрафтан» босату",label:"🛡️ Штрафтан босату",wheel:"Штраф жоқ"}
+];
+const CHECK_COLORS=["#239b68","#b78b2c","#4c84b8","#bd613f","#7856a6","#397d9b","#568b54","#a76b9b","#c27c35","#397b82","#b35d66","#687a3b","#5470a3","#a16d38","#5b6578"];
+
 const money=n=>new Intl.NumberFormat("kk-KZ").format(Number(n)||0)+" ₸";
 const pct=(s,p)=>p>0?Math.round(s/p*100):0;
 const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -342,10 +357,8 @@ function localDateString(date){
  return `${y}-${m}-${d}`;
 }
 function initializeDynamicsDates(){
- const today=localDateString(new Date()),firstDay=new Date();
- firstDay.setDate(1);
- dynamicsStartDate=localDateString(firstDay);
- dynamicsEndDate=today;
+ const today=localDateString(new Date()),firstDay=new Date();firstDay.setDate(1);
+ dynamicsStartDate=localDateString(firstDay);dynamicsEndDate=today;
  document.getElementById("dynamicsStart").value=dynamicsStartDate;
  document.getElementById("dynamicsEnd").value=dynamicsEndDate;
 }
@@ -353,34 +366,29 @@ async function applyDynamicsDates(){
  const start=document.getElementById("dynamicsStart").value,end=document.getElementById("dynamicsEnd").value;
  if(!start||!end)return alert("Басталу және аяқталу күндерін таңда.");
  if(start>end)return alert("Басталу күні аяқталу күнінен кейін болмауы керек.");
- dynamicsStartDate=start;dynamicsEndDate=end;
- await loadManagerDynamics();
+ dynamicsStartDate=start;dynamicsEndDate=end;await loadManagerDynamics();
 }
 
-/* LOAD DAILY SALES HISTORY */
+/* DAILY SALES HISTORY */
 async function loadManagerDynamics(){
  const status=document.getElementById("dynamicsStatus");
  if(!status||dynamicsLoading||!dynamicsStartDate||!dynamicsEndDate)return;
  dynamicsLoading=true;status.textContent="Динамика жүктелуде...";
  try{
   const {data,error}=await db.from("manager_sales_history").select("manager_id,manager_name,photo_url,snapshot_date,sales,checks").gte("snapshot_date",dynamicsStartDate).lte("snapshot_date",dynamicsEndDate).order("snapshot_date",{ascending:true});
-  if(error)throw error;
-  dynamicsHistory=data||[];
-  renderManagerDynamics();
+  if(error)throw error;dynamicsHistory=data||[];renderManagerDynamics();
  }catch(error){status.textContent="Динамиканы жүктеу қатесі: "+error.message;}
  finally{dynamicsLoading=false;}
 }
 function dynamicsColor(index){return dynamicsColors[index%dynamicsColors.length];}
 function loadDynamicsAvatar(manager){
- const url=photo(manager);
- if(dynamicsImages[url])return dynamicsImages[url];
+ const url=photo(manager);if(dynamicsImages[url])return dynamicsImages[url];
  const img=new Image();img.crossOrigin="anonymous";dynamicsImages[url]=img;
- img.onload=()=>renderManagerDynamics();img.onerror=()=>renderManagerDynamics();img.src=url;
- return img;
+ img.onload=()=>renderManagerDynamics();img.onerror=()=>renderManagerDynamics();img.src=url;return img;
 }
 function drawDynamicsAvatar(ctx,img,x,y,color){
  ctx.save();ctx.beginPath();ctx.arc(x,y,17,0,Math.PI*2);ctx.clip();
- if(img&&img.complete&&img.naturalWidth){ctx.drawImage(img,x-17,y-17,34,34);}
+ if(img&&img.complete&&img.naturalWidth)ctx.drawImage(img,x-17,y-17,34,34);
  else{ctx.fillStyle="#26364e";ctx.fillRect(x-17,y-17,34,34);ctx.fillStyle="#fff";ctx.font="bold 13px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("D",x,y);}
  ctx.restore();ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.strokeStyle=color;ctx.lineWidth=3;ctx.stroke();
 }
@@ -397,36 +405,32 @@ function renderManagerDynamics(){
  const dateCount=dates.length,getX=index=>left+(dateCount===1?chartWidth/2:index/(dateCount-1)*chartWidth);
  const historyByManager={};
  dynamicsHistory.forEach(row=>{const id=String(row.manager_id);if(!historyByManager[id])historyByManager[id]={};historyByManager[id][row.snapshot_date]=Number(row.sales)||0;});
- let maxSales=0;
- Object.values(historyByManager).forEach(days=>Object.values(days).forEach(value=>maxSales=Math.max(maxSales,value)));
+ let maxSales=0;Object.values(historyByManager).forEach(days=>Object.values(days).forEach(value=>maxSales=Math.max(maxSales,value)));
  const activeManagers=managers.filter(m=>historyByManager[String(m.id)]&&Object.keys(historyByManager[String(m.id)]).length>0);
  activeManagers.forEach(manager=>{const days=historyByManager[String(manager.id)],latestDate=Object.keys(days).sort().pop();if(latestDate)maxSales=Math.max(maxSales,days[latestDate]);});
  const yMax=Math.max(100000,Math.ceil(maxSales/100000)*100000),yPos=value=>top+chartHeight-(value/yMax)*chartHeight;
  ctx.font="11px Arial";ctx.textAlign="right";ctx.textBaseline="middle";
  for(let i=0;i<=5;i++){
-  const value=yMax*i/5,y=yPos(value);
-  ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(width-right,y);ctx.strokeStyle="#26364c";ctx.lineWidth=1;ctx.stroke();
-  ctx.fillStyle="#94a1b7";const label=value>=1000000?(value/1000000).toFixed(1)+"M":Math.round(value/1000)+"K";ctx.fillText(label,left-10,y);
+  const value=yMax*i/5,y=yPos(value);ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(width-right,y);ctx.strokeStyle="#26364c";ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle="#94a1b7";ctx.fillText(value>=1000000?(value/1000000).toFixed(1)+"M":Math.round(value/1000)+"K",left-10,y);
  }
  ctx.textAlign="center";ctx.textBaseline="top";ctx.fillStyle="#94a1b7";ctx.font="10px Arial";
  const step=Math.max(1,Math.ceil(dateCount/12));
  dates.forEach((date,i)=>{if(i%step!==0&&i!==dateCount-1)return;ctx.fillText(date.slice(5).replace("-","."),getX(i),height-bottom+17);});
  legend.innerHTML="";
  activeManagers.forEach((manager,index)=>{
-  const id=String(manager.id),color=dynamicsColor(index),days=historyByManager[id]||[],points=[];
+  const id=String(manager.id),color=dynamicsColor(index),days=historyByManager[id]||{},points=[];
   dates.forEach((date,i)=>{if(days[date]!==undefined)points.push({x:getX(i),y:yPos(days[date]),sales:days[date],date});});
   if(!points.length)return;
   ctx.beginPath();points.forEach((point,i)=>{if(i===0)ctx.moveTo(point.x,point.y);else ctx.lineTo(point.x,point.y);});
   ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.lineCap="round";ctx.stroke();
   points.forEach(point=>{ctx.beginPath();ctx.arc(point.x,point.y,3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();});
-  const last=points[points.length-1],img=loadDynamicsAvatar(manager);
-  drawDynamicsAvatar(ctx,img,last.x,last.y,color);
-  ctx.fillStyle=color;ctx.font="bold 12px Arial";ctx.textAlign="left";ctx.textBaseline="middle";
-  ctx.fillText(manager.name,last.x+25,last.y-8);ctx.fillStyle="#fff";ctx.font="11px Arial";ctx.fillText(money(last.sales),last.x+25,last.y+8);
+  const last=points[points.length-1],img=loadDynamicsAvatar(manager);drawDynamicsAvatar(ctx,img,last.x,last.y,color);
+  ctx.fillStyle=color;ctx.font="bold 12px Arial";ctx.textAlign="left";ctx.textBaseline="middle";ctx.fillText(manager.name,last.x+25,last.y-8);
+  ctx.fillStyle="#fff";ctx.font="11px Arial";ctx.fillText(money(last.sales),last.x+25,last.y+8);
   const item=document.createElement("div");item.className="dynamics-legend-item";
   const dot=document.createElement("span");dot.className="dynamics-dot";dot.style.background=color;
-  const name=document.createElement("span");name.textContent=manager.name;
-  item.appendChild(dot);item.appendChild(name);legend.appendChild(item);
+  const name=document.createElement("span");name.textContent=manager.name;item.appendChild(dot);item.appendChild(name);legend.appendChild(item);
  });
  let totalLatest=0;
  activeManagers.forEach(manager=>{const days=historyByManager[String(manager.id)],availableDates=Object.keys(days).sort(),lastAvailable=availableDates[availableDates.length-1];if(lastAvailable)totalLatest+=Number(days[lastAvailable])||0;});
@@ -437,7 +441,7 @@ function renderManagerDynamics(){
  document.getElementById("dynamicsStatus").textContent=dynamicsHistory.length?`${dynamicsStartDate} — ${dynamicsEndDate} • ${activeManagers.length} менеджер • ${dynamicsHistory.length} күндік жазба`:"Таңдалған кезеңде тарих табылмады. Менеджерлердің сатылымын өзгерткен сайын күндік тарих автоматты түрде жазылады.";
 }
 
-/* FIXED FORTUNE WHEEL LABELS */
+/* FIRST WHEEL LABELS */
 function renderWheelLabels(){
  const disc=document.getElementById("wheelDisc");if(!disc)return;
  const size=disc.clientWidth;if(size<50){requestAnimationFrame(renderWheelLabels);return;}
@@ -445,12 +449,11 @@ function renderWheelLabels(){
  const labels=["Gorilla","2 000 ₸","Taxi","Обед","Кофе","🎧","🌴","💨","⏱","5 000","0 ₸"];
  let cumulative=0;const gradient=[];disc.innerHTML="";
  PRIZES.forEach((prize,i)=>{
-  const start=cumulative,probability=prize.probability,end=start+probability;
-  gradient.push(`${colors[i]} ${start}% ${end}%`);
+  const start=cumulative,probability=prize.probability,end=start+probability;gradient.push(`${colors[i]} ${start}% ${end}%`);
   const middlePercent=start+probability/2,angleDeg=middlePercent*3.6-90,angleRad=angleDeg*Math.PI/180;
-  let radius;if(probability>=15)radius=size*.29;else if(probability>=10)radius=size*.33;else if(probability>=5)radius=size*.37;else radius=size*.40;
+  let radius=probability>=15?size*.29:probability>=10?size*.33:probability>=5?size*.37:size*.40;
   const x=center+Math.cos(angleRad)*radius,y=center+Math.sin(angleRad)*radius,label=document.createElement("div");
-  let sizeClass="tiny";if(probability>=15)sizeClass="large";else if(probability>=10)sizeClass="medium";else if(probability>=5)sizeClass="small";
+  let sizeClass=probability>=15?"large":probability>=10?"medium":probability>=5?"small":"tiny";
   label.className="wheel-label "+sizeClass;label.style.left=x+"px";label.style.top=y+"px";
   label.style.transform=`translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
   label.innerHTML=`<span>${safe(labels[i])}</span>`;disc.appendChild(label);cumulative=end;
@@ -458,8 +461,29 @@ function renderWheelLabels(){
  disc.style.background=`conic-gradient(from -90deg,${gradient.join(",")})`;
 }
 function renderPrizeList(){
- const list=document.getElementById("prizeList");
- list.innerHTML=PRIZES.map((p,i)=>`<div class="prize-item"><span>${safe(PRIZE_LIST_LABELS[i])}</span>${isROP?`<b>${p.probability}%</b>`:""}</div>`).join("");
+ document.getElementById("prizeList").innerHTML=PRIZES.map((p,i)=>`<div class="prize-item"><span>${safe(PRIZE_LIST_LABELS[i])}</span>${isROP?`<b>${p.probability}%</b>`:""}</div>`).join("");
+}
+
+/* SECOND WHEEL LABELS */
+function renderCheckWheelLabels(){
+ const disc=document.getElementById("checkWheelDisc");if(!disc)return;
+ const size=disc.clientWidth;if(size<50){requestAnimationFrame(renderCheckWheelLabels);return;}
+ const center=size/2,gradient=[];disc.innerHTML="";
+ CHECK_PRIZES.forEach((prize,i)=>{
+  const start=i*(100/15),end=(i+1)*(100/15);
+  gradient.push(`${CHECK_COLORS[i]} ${start}% ${end}%`);
+  const angleDeg=(i+.5)*24-90,angleRad=angleDeg*Math.PI/180,radius=size*.365;
+  const x=center+Math.cos(angleRad)*radius,y=center+Math.sin(angleRad)*radius;
+  const label=document.createElement("div");label.className="wheel-label";
+  label.style.width="43px";label.style.fontSize="9px";label.style.left=x+"px";label.style.top=y+"px";
+  label.style.transform=`translate(-50%,-50%) rotate(${angleDeg+90}deg)`;
+  label.innerHTML=`<span>${safe(prize.wheel)}</span>`;disc.appendChild(label);
+ });
+ disc.style.background=`conic-gradient(from -90deg,${gradient.join(",")})`;
+}
+function renderCheckPrizeList(){
+ const list=document.getElementById("checkPrizeList");
+ list.innerHTML=CHECK_PRIZES.map(p=>`<div class="prize-item"><span>${safe(p.label)}</span>${isROP?`<b>6.67%</b>`:""}</div>`).join("");
 }
 
 /* LOAD DATA */
@@ -470,8 +494,10 @@ async function load(){
  const newLeader=sorted[0]||null,newLeaderId=newLeader?String(newLeader.id):null;
  if(hasLoadedOnce&&previousLeaderId!==null&&newLeaderId!==previousLeaderId&&newLeader)celebrateChampion(newLeader);
  previousLeaderId=newLeaderId;hasLoadedOnce=true;managers=newManagers;
- render();refreshFortuneManagerOptions();
- await loadFortuneHistory();updateSpinAvailability();await loadManagerDynamics();
+ render();refreshFortuneManagerOptions();refreshCheckFortuneManagerOptions();
+ await loadFortuneHistory();await loadCheckFortuneHistory();
+ updateSpinAvailability();updateCheckSpinAvailability();
+ await loadManagerDynamics();
 }
 function render(){
  const sorted=[...managers].sort((a,b)=>Number(b.sales||0)-Number(a.sales||0));
@@ -482,22 +508,14 @@ function render(){
  document.getElementById("managerCount").textContent=sorted.length+" менеджер";
  document.getElementById("topFive").innerHTML=sorted.slice(0,5).map((m,i)=>card(m,i,true)).join("");
  document.getElementById("ranking").innerHTML=sorted.map((m,i)=>card(m,i,false)).join("")||'<div class="panel muted">Әзірге менеджерлер қосылмаған.</div>';
-
- /* ROP MANAGER LIST + ADD SALE BUTTON */
- document.getElementById("editList").innerHTML=isROP?
-  sorted.map(m=>`
-   <div class="rank-row">
-    <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
-    <div class="info">
-     <h3>${safe(m.name)}</h3>
-     <span class="muted">Жалпы сатылым: ${money(m.sales)}</span>
-     <div class="muted">${Number(m.checks||0)} чек</div>
-    </div>
-    <button class="add-sale-btn" onclick="addManagerSale('${safe(m.id)}')">+ САТЫЛЫМ</button>
-    <button class="secondary" onclick="editManager('${safe(m.id)}')">Өңдеу</button>
-    <button class="danger" onclick="deleteManager('${safe(m.id)}')">Жою</button>
-   </div>
-  `).join(""):"";
+ document.getElementById("editList").innerHTML=isROP?sorted.map(m=>`
+  <div class="rank-row">
+   <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
+   <div class="info"><h3>${safe(m.name)}</h3><span class="muted">Жалпы сатылым: ${money(m.sales)}</span><div class="muted">${Number(m.checks||0)} чек</div></div>
+   <button class="add-sale-btn" onclick="addManagerSale('${safe(m.id)}')">+ САТЫЛЫМ</button>
+   <button class="secondary" onclick="editManager('${safe(m.id)}')">Өңдеу</button>
+   <button class="danger" onclick="deleteManager('${safe(m.id)}')">Жою</button>
+  </div>`).join(""):"";
  renderManagerDynamics();
 }
 function card(m,i,top){
@@ -505,13 +523,11 @@ function card(m,i,top){
  return `<div class="${top?'manager '+(isLeader?'first':''):'rank-row'}">
   <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
   <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
-  <div class="${top?'':'info'}">
-   ${isLeader?'<div class="leader-crown">👑</div>':''}
+  <div class="${top?'':'info'}">${isLeader?'<div class="leader-crown">👑</div>':''}
    <h3>${safe(m.name)}</h3><div class="amount">${money(m.sales)}</div><div class="muted">${Number(m.checks||0)} чек</div>
   </div>
   <div style="${top?'':'min-width:100px;text-align:right'}">
-   <strong style="color:#f2c66d">${p}%</strong>
-   <div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
+   <strong style="color:#f2c66d">${p}%</strong><div class="progress"><div style="width:${Math.min(p,100)}%"></div></div>
    <div class="details"><span>${top?'':'Жоспар'}</span><span>${money(m.plan)}</span></div>
    <div class="details"><span>Қалды</span><span>${money(Math.max(0,Number(m.plan||0)-Number(m.sales||0)))}</span></div>
   </div>
@@ -521,50 +537,32 @@ function card(m,i,top){
 /* ADD MANAGER SALE */
 async function addManagerSale(id){
  if(!isROP){alert("Бұл функция тек РОП үшін қолжетімді.");return;}
- const manager=managers.find(m=>String(m.id)===String(id));
- if(!manager)return;
-
- const amountInput=prompt(`${manager.name}\nҚосылатын сатылым сомасын енгіз (₸):`);
- if(amountInput===null)return;
+ const manager=managers.find(m=>String(m.id)===String(id));if(!manager)return;
+ const amountInput=prompt(`${manager.name}\nҚосылатын сатылым сомасын енгіз (₸):`);if(amountInput===null)return;
  const amount=Number(String(amountInput).replace(/\s/g,"").replace(",","."));
  if(!Number.isFinite(amount)||amount<=0){alert("Сатылым сомасын дұрыс енгіз.");return;}
-
- const checksInput=prompt(`${manager.name}\nҚосылатын чек санын енгіз:`,"1");
- if(checksInput===null)return;
+ const checksInput=prompt(`${manager.name}\nҚосылатын чек санын енгіз:`,"1");if(checksInput===null)return;
  const checks=Number(checksInput);
  if(!Number.isInteger(checks)||checks<0){alert("Чек саны 0 немесе одан үлкен бүтін сан болуы керек.");return;}
-
- const confirmed=confirm(
-  `${manager.name}\n\nҚосылатын сатылым: ${money(amount)}\nҚосылатын чек: ${checks}\n\nҚазіргі сатылым: ${money(manager.sales)}\nЖаңа сатылым: ${money(Number(manager.sales||0)+amount)}\n\nСатылымды қосамыз ба?`
- );
- if(!confirmed)return;
-
+ if(!confirm(`${manager.name}\n\nҚосылатын сатылым: ${money(amount)}\nҚосылатын чек: ${checks}\n\nҚазіргі сатылым: ${money(manager.sales)}\nЖаңа сатылым: ${money(Number(manager.sales||0)+amount)}\n\nСатылымды қосамыз ба?`))return;
  try{
-  const {data,error}=await db.rpc("add_manager_sale",{
-   p_manager_id:String(manager.id),
-   p_amount:amount,
-   p_checks:checks
-  });
-  if(error)throw error;
-  if(!data||!data.success)throw new Error("Сатылым серверде расталмады.");
-  await load();
-  alert(`${manager.name} менеджеріне сатылым қосылды!\n\nЖаңа сатылым: ${money(data.sales)}\nЖалпы чек: ${data.checks}`);
+  const {data,error}=await db.rpc("add_manager_sale",{p_manager_id:String(manager.id),p_amount:amount,p_checks:checks});
+  if(error)throw error;if(!data||!data.success)throw new Error("Сатылым серверде расталмады.");
+  await load();alert(`${manager.name} менеджеріне сатылым қосылды!\n\nЖаңа сатылым: ${money(data.sales)}\nЖалпы чек: ${data.checks}`);
  }catch(error){alert("Сатылым қосу қатесі: "+error.message);}
 }
 
 /* CHAMPION ANIMATION */
 function celebrateChampion(manager){
  const overlay=document.getElementById("championOverlay");
- document.getElementById("championName").textContent=manager.name;
- document.getElementById("championPhoto").src=photo(manager);
+ document.getElementById("championName").textContent=manager.name;document.getElementById("championPhoto").src=photo(manager);
  overlay.classList.remove("active");void overlay.offsetWidth;overlay.classList.add("active");
  startConfetti();clearTimeout(celebrationTimer);
  celebrationTimer=setTimeout(()=>{overlay.classList.remove("active");stopConfetti();},6500);
 }
 let particles=[];
 function startConfetti(){
- stopConfetti();
- const canvas=document.getElementById("confettiCanvas"),ctx=canvas.getContext("2d");
+ stopConfetti();const canvas=document.getElementById("confettiCanvas"),ctx=canvas.getContext("2d");
  canvas.width=window.innerWidth*devicePixelRatio;canvas.height=window.innerHeight*devicePixelRatio;
  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
  const w=window.innerWidth,h=window.innerHeight,colors=["#ffd76b","#ffffff","#e5a92e","#f7c84c","#f5e6ad","#d88c20","#ff8c42"];
@@ -579,78 +577,65 @@ function startConfetti(){
 function drawConfetti(){
  const canvas=document.getElementById("confettiCanvas"),ctx=canvas.getContext("2d"),w=window.innerWidth,h=window.innerHeight;
  ctx.clearRect(0,0,w,h);particles=particles.filter(p=>p.life>0&&p.y<h+40);
- particles.forEach(p=>{
-  p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.vx*=.994;p.rotation+=p.spin;p.life--;
-  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.fillStyle=p.color;ctx.globalAlpha=Math.min(1,p.life/45);
-  if(p.shape==="rect")ctx.fillRect(-p.size/2,-p.size/3,p.size,p.size*.65);
-  else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}
-  ctx.restore();
- });
+ particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.vx*=.994;p.rotation+=p.spin;p.life--;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.fillStyle=p.color;ctx.globalAlpha=Math.min(1,p.life/45);if(p.shape==="rect")ctx.fillRect(-p.size/2,-p.size/3,p.size,p.size*.65);else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}ctx.restore();});
  if(particles.length>0)confettiAnimation=requestAnimationFrame(drawConfetti);else stopConfetti();
 }
 function stopConfetti(){
  if(confettiAnimation){cancelAnimationFrame(confettiAnimation);confettiAnimation=null;}
- const canvas=document.getElementById("confettiCanvas");
- if(canvas){const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);}
- particles=[];
+ const canvas=document.getElementById("confettiCanvas");if(canvas){const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);}particles=[];
 }
 
 /* ROP AUTH */
 async function login(){
- const email=prompt("РОП email:");if(!email)return;
- const password=prompt("Құпиясөз:");if(!password)return;
- const {error}=await db.auth.signInWithPassword({email,password});
- if(error){alert(error.message);return;}
- await checkROP();
+ const email=prompt("РОП email:");if(!email)return;const password=prompt("Құпиясөз:");if(!password)return;
+ const {error}=await db.auth.signInWithPassword({email,password});if(error){alert(error.message);return;}await checkROP();
 }
 async function checkROP(){
  const {data:{user}}=await db.auth.getUser();
  if(!user){
   isROP=false;document.getElementById("adminPanel").classList.add("hidden");
-  document.body.classList.remove("rop-view");renderPrizeList();renderFortuneHistoryVisibility();renderFortuneHistory();render();return;
+  document.body.classList.remove("rop-view");renderPrizeList();renderCheckPrizeList();
+  renderFortuneHistoryVisibility();renderCheckFortuneHistoryVisibility();
+  renderFortuneHistory();renderCheckFortuneHistory();render();return;
  }
  const {data,error}=await db.from("rop_users").select("user_id").eq("user_id",user.id).maybeSingle();
- isROP=!!data&&!error;
- document.body.classList.toggle("rop-view",isROP);
+ isROP=!!data&&!error;document.body.classList.toggle("rop-view",isROP);
  document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
  if(!isROP)alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
- renderPrizeList();renderFortuneHistoryVisibility();renderFortuneHistory();render();
+ renderPrizeList();renderCheckPrizeList();renderFortuneHistoryVisibility();renderCheckFortuneHistoryVisibility();
+ renderFortuneHistory();renderCheckFortuneHistory();render();
 }
 async function logout(){
  await db.auth.signOut();isROP=false;document.body.classList.remove("rop-view");
  document.getElementById("adminPanel").classList.add("hidden");
- renderPrizeList();renderFortuneHistoryVisibility();renderFortuneHistory();render();
+ renderPrizeList();renderCheckPrizeList();renderFortuneHistoryVisibility();renderCheckFortuneHistoryVisibility();
+ renderFortuneHistory();renderCheckFortuneHistory();render();
 }
-function renderFortuneHistoryVisibility(){
- document.getElementById("probabilityHeader").classList.toggle("hidden",!isROP);
-}
+function renderFortuneHistoryVisibility(){document.getElementById("probabilityHeader").classList.toggle("hidden",!isROP);}
+function renderCheckFortuneHistoryVisibility(){document.getElementById("checkProbabilityHeader").classList.toggle("hidden",!isROP);}
+
 function renderFortuneHistory(){
  const body=document.getElementById("fortuneHistory"),colspan=isROP?5:4;
  if(!fortuneHistoryRows.length){body.innerHTML=`<tr><td colspan="${colspan}" class="muted">Әзірге ұтыс болған жоқ.</td></tr>`;return;}
- body.innerHTML=fortuneHistoryRows.map(r=>`<tr>
-  <td>${safe(r.manager_name||"Менеджер")}</td><td>${safe(r.prize)}</td>
-  ${isROP?`<td>${Number(r.probability)||0}%</td>`:""}
-  <td>#${Number(r.spin_number)||1}</td>
-  <td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td>
- </tr>`).join("");
+ body.innerHTML=fortuneHistoryRows.map(r=>`<tr><td>${safe(r.manager_name||"Менеджер")}</td><td>${safe(r.prize)}</td>${isROP?`<td>${Number(r.probability)||0}%</td>`:""}<td>#${Number(r.spin_number)||1}</td><td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td></tr>`).join("");
+}
+function renderCheckFortuneHistory(){
+ const body=document.getElementById("checkFortuneHistory"),colspan=isROP?5:4;
+ if(!checkFortuneHistoryRows.length){body.innerHTML=`<tr><td colspan="${colspan}" class="muted">Әзірге ұтыс болған жоқ.</td></tr>`;return;}
+ body.innerHTML=checkFortuneHistoryRows.map(r=>`<tr><td>${safe(managers.find(m=>String(m.id)===String(r.manager_id))?.name||"Менеджер")}</td><td>${safe(r.prize)}</td>${isROP?`<td>${Number(r.probability)||6.67}%</td>`:""}<td>#${Number(r.spin_number)||1}</td><td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td></tr>`).join("");
 }
 
 /* MANAGER FORM */
 function resetForm(){
- document.getElementById("managerForm").reset();
- document.getElementById("managerId").value="";
+ document.getElementById("managerForm").reset();document.getElementById("managerId").value="";
  document.getElementById("formTitle").textContent="Менеджер қосу";
 }
 async function uploadManagerPhoto(file){
  if(!file)return null;
  const ext=file.name.split(".").pop().toLowerCase(),fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
- const {error}=await db.storage.from("manager-photos").upload(fileName,file,{upsert:true});
- if(error)throw error;
- const {data}=db.storage.from("manager-photos").getPublicUrl(fileName);
- return data.publicUrl;
+ const {error}=await db.storage.from("manager-photos").upload(fileName,file,{upsert:true});if(error)throw error;
+ const {data}=db.storage.from("manager-photos").getPublicUrl(fileName);return data.publicUrl;
 }
-
-/* SAVE MANAGER + PIN */
 document.getElementById("managerForm").addEventListener("submit",async e=>{
  e.preventDefault();if(!isROP)return alert("Рұқсат жоқ");
  const button=e.submitter;button.disabled=true;button.textContent="Сақталуда...";
@@ -658,8 +643,7 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
   const id=document.getElementById("managerId").value,pin=document.getElementById("managerPin").value.trim();
   if(pin&&!/^\d{4}$/.test(pin))throw new Error("PIN дәл 4 саннан тұруы керек.");
   if(!id&&!/^\d{4}$/.test(pin))throw new Error("Жаңа менеджерге 4 таңбалы PIN міндетті.");
-  const file=document.getElementById("photoFile").files[0];
-  let photoUrl=document.getElementById("photo").value.trim()||null;
+  const file=document.getElementById("photoFile").files[0];let photoUrl=document.getElementById("photo").value.trim()||null;
   if(file){
    if(file.size>5*1024*1024)throw new Error("Фото көлемі 5 MB-тан аспауы керек.");
    if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Тек JPG, PNG немесе WEBP форматындағы фото жүкте.");
@@ -667,45 +651,32 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
   }
   const item={name:document.getElementById("name").value.trim(),photo_url:photoUrl,plan:Number(document.getElementById("plan").value),sales:Number(document.getElementById("sales").value),checks:Number(document.getElementById("checks").value)};
   let saved;
-  if(id){
-   const {data,error}=await db.from("managers").update(item).eq("id",id).select().single();
-   if(error)throw error;saved=data;
-  }else{
-   const {data,error}=await db.from("managers").insert(item).select().single();
-   if(error)throw error;saved=data;
-  }
-  if(pin){
-   const {error}=await db.rpc("set_manager_fortune_pin",{p_manager_id:String(saved.id),p_pin:pin});
-   if(error)throw new Error("Менеджер сақталды, бірақ PIN орнатылмады: "+error.message);
-  }
+  if(id){const {data,error}=await db.from("managers").update(item).eq("id",id).select().single();if(error)throw error;saved=data;}
+  else{const {data,error}=await db.from("managers").insert(item).select().single();if(error)throw error;saved=data;}
+  if(pin){const {error}=await db.rpc("set_manager_fortune_pin",{p_manager_id:String(saved.id),p_pin:pin});if(error)throw new Error("Менеджер сақталды, бірақ PIN орнатылмады: "+error.message);}
   resetForm();await load();alert(pin?"Менеджер және PIN сәтті сақталды!":"Менеджер сәтті сақталды!");
  }catch(error){alert("Қате: "+error.message);}
  finally{button.disabled=false;button.textContent="Сақтау";}
 });
 function editManager(id){
  const m=managers.find(x=>String(x.id)===String(id));if(!m)return;
- document.getElementById("managerId").value=m.id;
- document.getElementById("name").value=m.name;
- document.getElementById("photo").value=m.photo_url||"";
- document.getElementById("photoFile").value="";
- document.getElementById("plan").value=m.plan;
- document.getElementById("sales").value=m.sales;
- document.getElementById("checks").value=m.checks;
- document.getElementById("managerPin").value="";
+ document.getElementById("managerId").value=m.id;document.getElementById("name").value=m.name;
+ document.getElementById("photo").value=m.photo_url||"";document.getElementById("photoFile").value="";
+ document.getElementById("plan").value=m.plan;document.getElementById("sales").value=m.sales;
+ document.getElementById("checks").value=m.checks;document.getElementById("managerPin").value="";
  document.getElementById("formTitle").textContent="Менеджерді өңдеу";
  document.getElementById("managerForm").scrollIntoView({behavior:"smooth"});
 }
 async function deleteManager(id){
  if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
- const {error}=await db.from("managers").delete().eq("id",id);
- if(error)alert(error.message);else await load();
+ const {error}=await db.from("managers").delete().eq("id",id);if(error)alert(error.message);else await load();
 }
 
-/* FORTUNE WHEEL MANAGERS */
+/* FIRST WHEEL: MANAGERS + SPINS */
 function refreshFortuneManagerOptions(){
  const select=document.getElementById("fortuneManager"),selected=select.value;
  select.innerHTML='<option value="">Менеджерді таңда...</option>'+
-  [...managers].sort((a,b)=>String(a.name).localeCompare(String(b.name),"kk")).map(m=>`<option value="${safe(m.id)}">${safe(m.name)}</option>`).join("");
+ [...managers].sort((a,b)=>String(a.name).localeCompare(String(b.name),"kk")).map(m=>`<option value="${safe(m.id)}">${safe(m.name)}</option>`).join("");
  if(managers.some(m=>String(m.id)===selected))select.value=selected;
 }
 function getSelectedManager(){return managers.find(m=>String(m.id)===document.getElementById("fortuneManager").value);}
@@ -718,18 +689,15 @@ function updateSpinAvailability(){
  button.disabled=wheelBusy||remaining<=0||!/^\d{4}$/.test(pin);
 }
 document.getElementById("fortuneManager").addEventListener("change",()=>{
- document.getElementById("spinResult").innerHTML='<strong>Сәттілік серік болсын!</strong><span>PIN енгізіп, айналдыруды баста.</span>';
- updateSpinAvailability();
+ document.getElementById("spinResult").innerHTML='<strong>Сәттілік серік болсын!</strong><span>PIN енгізіп, айналдыруды баста.</span>';updateSpinAvailability();
 });
 document.getElementById("fortunePin").addEventListener("input",updateSpinAvailability);
 
-/* FORTUNE HISTORY */
 async function loadFortuneHistory(){
- const body=document.getElementById("fortuneHistory");
- const {data,error}=await db.rpc("get_fortune_history");
+ const body=document.getElementById("fortuneHistory"),{data,error}=await db.rpc("get_fortune_history");
  if(error){body.innerHTML=`<tr><td colspan="${isROP?5:4}" class="muted">Тарих жүктелмеді: ${safe(error.message)}</td></tr>`;return;}
- const rows=Array.isArray(data)?data:[];fortuneHistoryRows=rows;fortuneUsedByManager={};
- rows.forEach(r=>{const key=String(r.manager_id);fortuneUsedByManager[key]=(fortuneUsedByManager[key]||0)+1;});
+ fortuneHistoryRows=Array.isArray(data)?data:[];fortuneUsedByManager={};
+ fortuneHistoryRows.forEach(r=>{const key=String(r.manager_id);fortuneUsedByManager[key]=(fortuneUsedByManager[key]||0)+1;});
  renderFortuneHistory();updateSpinAvailability();
 }
 function normalizePrizeName(value){
@@ -747,42 +715,107 @@ function normalizePrizeName(value){
  if(s.includes("0 kzt")||s.includes("0 ₸")||s.includes("no prize")||s.includes("ұтыс жоқ"))return "0 KZT";
  return value;
 }
-
-/* WHEEL ANIMATION */
 function animateWheel(prizeName){
  const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));if(!prize)return Promise.resolve();
  const index=PRIZES.indexOf(prize),before=PRIZES.slice(0,index).reduce((sum,p)=>sum+p.probability,0),center=(before+prize.probability/2)*3.6;
- const disc=document.getElementById("wheelDisc"),current=Number(disc.dataset.rotation||0),normalized=((current%360)+360)%360,targetMod=(360-center+360)%360,delta=(targetMod-normalized+360)%360,finalRotation=current+360*7+delta;
+ const disc=document.getElementById("wheelDisc"),current=Number(disc.dataset.rotation||0),normalized=((current%360)+360)%360;
+ const targetMod=(360-center+360)%360,delta=(targetMod-normalized+360)%360,finalRotation=current+360*7+delta;
  disc.style.transition="transform 6s cubic-bezier(.12,.75,.08,1)";disc.style.transform=`rotate(${finalRotation}deg)`;disc.dataset.rotation=String(finalRotation);
  return new Promise(resolve=>setTimeout(resolve,6250));
 }
-
-/* SPIN */
 async function spinFortune(){
  if(wheelBusy)return;
  const manager=getSelectedManager(),pin=document.getElementById("fortunePin").value.trim();
- if(!manager)return alert("Алдымен менеджерді таңда.");
- if(!/^\d{4}$/.test(pin))return alert("4 таңбалы PIN енгіз.");
- wheelBusy=true;updateSpinAvailability();
- const button=document.getElementById("spinButton");button.textContent="ДӨҢГЕЛЕК АЙНАЛЫП ЖАТЫР...";
+ if(!manager)return alert("Алдымен менеджерді таңда.");if(!/^\d{4}$/.test(pin))return alert("4 таңбалы PIN енгіз.");
+ wheelBusy=true;updateSpinAvailability();const button=document.getElementById("spinButton");button.textContent="ДӨҢГЕЛЕК АЙНАЛЫП ЖАТЫР...";
  document.getElementById("spinResult").innerHTML="<strong>🍀 Сәттілік!</strong><span>Нәтиже серверден расталып жатыр...</span>";
  try{
-  const {data,error}=await db.rpc("spin_daryn_fortune",{p_manager_id:String(manager.id),p_pin:pin});
+  const {data,error}=await db.rpc("spin_daryn_fortune",{p_manager_id:String(manager.id),p_pin:pin});if(error)throw error;
+  const result=Array.isArray(data)?data[0]:data;if(!result)throw new Error("Серверден бос нәтиже келді.");
+  if(result.error)throw new Error(result.error);
+  const prizeName=result.prize??result.result??result.name;if(!prizeName)throw new Error("Сервер жауабында ұтыс атауы жоқ.");
+  await animateWheel(prizeName);
+  const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));
+  const probabilityInfo=isROP&&result.probability!=null?`Ықтималдық: ${Number(result.probability)||0}% • `:"";
+  document.getElementById("spinResult").innerHTML=`<strong>${safe(prize?prize.label:String(prizeName))}</strong><span>${probabilityInfo}Айналым: #${Number(result.spin_number)||1}</span>`;
+  document.getElementById("fortunePin").value="";await loadFortuneHistory();
+ }catch(error){document.getElementById("spinResult").innerHTML=`<strong>Айналдыру орындалмады</strong><span>${safe(error.message||"Белгісіз қате")}</span>`;alert("Қате: "+(error.message||"Айналдыру орындалмады"));}
+ finally{wheelBusy=false;button.textContent="🎡 АЙНАЛДЫРУ";updateSpinAvailability();}
+}
+
+/* SECOND WHEEL: CHECK-BASED */
+function refreshCheckFortuneManagerOptions(){
+ const select=document.getElementById("checkFortuneManager"),selected=select.value;
+ select.innerHTML='<option value="">Менеджерді таңда...</option>'+
+ [...managers].sort((a,b)=>String(a.name).localeCompare(String(b.name),"kk")).map(m=>`<option value="${safe(m.id)}">${safe(m.name)}</option>`).join("");
+ if(managers.some(m=>String(m.id)===selected))select.value=selected;
+}
+function getSelectedCheckManager(){return managers.find(m=>String(m.id)===document.getElementById("checkFortuneManager").value);}
+function updateCheckSpinAvailability(){
+ const manager=getSelectedCheckManager(),pin=document.getElementById("checkFortunePin").value.trim(),button=document.getElementById("spinCheckButton");
+ if(!manager){document.getElementById("checkAvailableSpins").textContent="— айналдыру";document.getElementById("checkSpinProgress").textContent="Менеджер таңдалмаған";button.disabled=true;return;}
+ const earned=Math.max(0,Number(manager.checks)||0),used=checkFortuneUsedByManager[String(manager.id)]||0,remaining=Math.max(0,earned-used);
+ document.getElementById("checkAvailableSpins").textContent=remaining+" айналдыру";
+ document.getElementById("checkSpinProgress").textContent=`Чек саны: ${earned} • Қолданылғаны: ${used} • Қалғаны: ${remaining}`;
+ button.disabled=checkWheelBusy||remaining<=0||!/^\d{4}$/.test(pin);
+}
+document.getElementById("checkFortuneManager").addEventListener("change",()=>{
+ document.getElementById("checkSpinResult").innerHTML='<strong>Сәттілік серік болсын!</strong><span>PIN енгізіп, айналдыруды баста.</span>';
+ updateCheckSpinAvailability();
+});
+document.getElementById("checkFortunePin").addEventListener("input",updateCheckSpinAvailability);
+
+/* CHECK WHEEL HISTORY — RPC */
+async function loadCheckFortuneHistory(){
+ const body=document.getElementById("checkFortuneHistory");
+ const {data,error}=await db.rpc("get_check_fortune_history");
+ if(error){body.innerHTML=`<tr><td colspan="${isROP?5:4}" class="muted">Тарих жүктелмеді: ${safe(error.message)}</td></tr>`;return;}
+ checkFortuneHistoryRows=Array.isArray(data)?data:[];
+ checkFortuneUsedByManager={};
+ checkFortuneHistoryRows.forEach(r=>{
+  const key=String(r.manager_id);
+  checkFortuneUsedByManager[key]=(checkFortuneUsedByManager[key]||0)+1;
+ });
+ renderCheckFortuneHistory();updateCheckSpinAvailability();
+}
+function animateCheckWheel(prizeName){
+ const index=CHECK_PRIZES.findIndex(p=>p.name===prizeName);
+ if(index<0)return Promise.resolve();
+ const center=(index+.5)*24,disc=document.getElementById("checkWheelDisc");
+ const current=Number(disc.dataset.rotation||0),normalized=((current%360)+360)%360;
+ const targetMod=(360-center+360)%360,delta=(targetMod-normalized+360)%360,finalRotation=current+360*7+delta;
+ disc.style.transition="transform 6s cubic-bezier(.12,.75,.08,1)";
+ disc.style.transform=`rotate(${finalRotation}deg)`;disc.dataset.rotation=String(finalRotation);
+ return new Promise(resolve=>setTimeout(resolve,6250));
+}
+async function spinCheckFortune(){
+ if(checkWheelBusy)return;
+ const manager=getSelectedCheckManager(),pin=document.getElementById("checkFortunePin").value.trim();
+ if(!manager)return alert("Алдымен менеджерді таңда.");
+ if(!/^\d{4}$/.test(pin))return alert("4 таңбалы PIN енгіз.");
+ checkWheelBusy=true;updateCheckSpinAvailability();
+ const button=document.getElementById("spinCheckButton");button.textContent="ДӨҢГЕЛЕК АЙНАЛЫП ЖАТЫР...";
+ document.getElementById("checkSpinResult").innerHTML="<strong>🍀 Сәттілік!</strong><span>Нәтиже серверден расталып жатыр...</span>";
+ try{
+  const {data,error}=await db.rpc("spin_daryn_check_fortune",{p_manager_id:String(manager.id),p_pin:pin});
   if(error)throw error;
   const result=Array.isArray(data)?data[0]:data;
   if(!result)throw new Error("Серверден бос нәтиже келді.");
   if(result.error)throw new Error(result.error);
   const prizeName=result.prize??result.result??result.name;
   if(!prizeName)throw new Error("Сервер жауабында ұтыс атауы жоқ.");
-  await animateWheel(prizeName);
-  const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));
-  const probabilityInfo=isROP?`Ықтималдық: ${Number(result.probability)||0}% • `:"";
-  document.getElementById("spinResult").innerHTML=`<strong>${safe(prize?prize.label:String(prizeName))}</strong><span>${probabilityInfo}Айналым: #${Number(result.spin_number)||1}</span>`;
-  document.getElementById("fortunePin").value="";await loadFortuneHistory();
+  await animateCheckWheel(prizeName);
+  const prize=CHECK_PRIZES.find(p=>p.name===prizeName);
+  const probabilityInfo=isROP&&result.probability!=null?`Ықтималдық: ${Number(result.probability).toFixed(2)}% • `:"";
+  document.getElementById("checkSpinResult").innerHTML=`<strong>${safe(prize?prize.label:String(prizeName))}</strong><span>${probabilityInfo}Айналым: #${Number(result.spin_number)||1}</span>`;
+  document.getElementById("checkFortunePin").value="";
+  await loadCheckFortuneHistory();await load();
  }catch(error){
-  document.getElementById("spinResult").innerHTML=`<strong>Айналдыру орындалмады</strong><span>${safe(error.message||"Белгісіз қате")}</span>`;
+  document.getElementById("checkSpinResult").innerHTML=`<strong>Айналдыру орындалмады</strong><span>${safe(error.message||"Белгісіз қате")}</span>`;
   alert("Қате: "+(error.message||"Айналдыру орындалмады"));
- }finally{wheelBusy=false;button.textContent="🎡 АЙНАЛДЫРУ";updateSpinAvailability();}
+ }finally{
+  checkWheelBusy=false;button.textContent="🎁 АЙНАЛДЫРУ";updateCheckSpinAvailability();
+ }
 }
 
 /* TV MODE */
@@ -796,7 +829,9 @@ function tvMode(){
 db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
 initializeDynamicsDates();
 renderWheelLabels();
+renderCheckWheelLabels();
 renderPrizeList();
+renderCheckPrizeList();
 load();
 checkROP();
 setInterval(load,15000);
@@ -804,7 +839,11 @@ setInterval(load,15000);
 let wheelResizeTimer;
 window.addEventListener("resize",()=>{
  clearTimeout(wheelResizeTimer);
- wheelResizeTimer=setTimeout(()=>{renderWheelLabels();renderManagerDynamics();},150);
+ wheelResizeTimer=setTimeout(()=>{
+  renderWheelLabels();
+  renderCheckWheelLabels();
+  renderManagerDynamics();
+ },150);
 });
 </script>
 </body>
