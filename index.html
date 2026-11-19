@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DARYN | Sales League</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}
@@ -87,7 +88,26 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .wheel-pointer{position:absolute;z-index:5;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-top:38px solid #fff0a4;filter:drop-shadow(0 3px 5px #000)}
 .wheel-outer{position:absolute;inset:0;border-radius:50%;padding:9px;background:linear-gradient(135deg,#fff0a8,#a97822,#f5d77d,#805515);box-shadow:0 0 0 3px #30230e,0 0 30px #e8b94c44}
 .wheel-disc{width:100%;height:100%;border-radius:50%;border:4px solid #30230e;position:relative;overflow:hidden;background:conic-gradient(from -90deg,#25a56a 0% 25%,#b78b2c 25% 35%,#4c84b8 35% 45%,#bd613f 45% 60%,#7856a6 60% 75%,#397d9b 75% 78%,#568b54 78% 80%,#d2a8e8 80% 81%,#6b8196 81% 86%,#c79b3c 86% 90%,#4b5362 90% 100%);transition:transform 6s cubic-bezier(.12,.75,.08,1)}
-.wheel-label{position:absolute;left:50%;top:50%;width:48%;height:22px;margin-top:-11px;transform-origin:0 50%;display:flex;align-items:center;padding-left:18px;font-size:clamp(9px,2vw,12px);font-weight:900;color:#fff;text-shadow:0 1px 3px #000;text-align:left;white-space:nowrap}
+.wheel-label{
+ position:absolute;
+ left:50%;
+ top:50%;
+ width:86px;
+ height:24px;
+ margin-top:-12px;
+ transform-origin:0 50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:clamp(9px,2vw,12px);
+ font-weight:900;
+ color:#fff;
+ text-shadow:0 2px 4px #000,0 0 5px #000;
+ text-align:center;
+ white-space:nowrap;
+ pointer-events:none;
+}
+.wheel-label span{display:block;width:100%;text-align:center}
 .wheel-hub{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,#fff0a8,#b78325);border:5px solid #49330d;display:flex;align-items:center;justify-content:center;color:#231807;font-weight:1000;font-size:15px;box-shadow:0 0 15px #0009}
 .wheel-controls{width:100%;max-width:420px}
 .wheel-controls button{width:100%;padding:15px;font-size:16px;letter-spacing:1px}
@@ -100,6 +120,7 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .spin-count{font-size:27px;font-weight:900;color:#f4cf79;margin:8px 0}
 .prize-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px}
 .prize-item{font-size:11px;color:#c7d0df;background:#18253a;padding:8px;border-radius:7px;display:flex;justify-content:space-between;gap:5px}
+.prize-item b{color:#f4cf79}
 .history-wrap{margin-top:22px}
 .history-table{width:100%;border-collapse:collapse;font-size:12px;min-width:570px}
 .history-table th,.history-table td{text-align:left;padding:10px;border-bottom:1px solid #2a374b}
@@ -153,7 +174,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
  <div class="section-title"><h2>📊 ТОЛЫҚ РЕЙТИНГ</h2><span class="muted" id="managerCount">0 менеджер</span></div>
  <div class="ranking" id="ranking"></div>
 
- <!-- FORTUNE WHEEL -->
  <section class="fortune-panel" id="fortunePanel">
   <h2 class="fortune-heading">🎡 DARYN SALES — FORTUNE WHEEL</h2>
   <div class="fortune-sub">ӘР 1 000 000 ₸ САТЫЛЫМҒА — 1 МҮМКІНДІК</div>
@@ -187,19 +207,7 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
     <div class="spin-count" id="availableSpins">— айналдыру</div>
     <div class="muted" id="spinProgress">Менеджер таңдалмаған</div>
 
-    <div class="prize-list">
-     <div class="prize-item"><span>🥤 Gorilla</span><b>25%</b></div>
-     <div class="prize-item"><span>💸 2 000 ₸</span><b>10%</b></div>
-     <div class="prize-item"><span>🚕 Такси</span><b>10%</b></div>
-     <div class="prize-item"><span>🍔 Обед</span><b>15%</b></div>
-     <div class="prize-item"><span>☕ Кофе</span><b>15%</b></div>
-     <div class="prize-item"><span>🎧 AirPods</span><b>3%</b></div>
-     <div class="prize-item"><span>🌴 1 күн демалыс</span><b>2%</b></div>
-     <div class="prize-item"><span>💨 Dyson</span><b>1%</b></div>
-     <div class="prize-item"><span>⏳ 1 сағат демалыс</span><b>5%</b></div>
-     <div class="prize-item"><span>💰 5 000 ₸</span><b>4%</b></div>
-     <div class="prize-item"><span>🥲 0 ₸</span><b>10%</b></div>
-    </div>
+    <div class="prize-list" id="prizeList"></div>
    </div>
   </div>
 
@@ -207,14 +215,21 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
    <div class="section-title"><h3>🎁 СОҢҒЫ ҰТЫСТАР</h3><span class="muted">LIVE HISTORY</span></div>
    <div class="history-scroll">
     <table class="history-table">
-     <thead><tr><th>Менеджер</th><th>Ұтыс</th><th>Ықтималдық</th><th>Айналым</th><th>Күні</th></tr></thead>
+     <thead>
+      <tr>
+       <th>Менеджер</th>
+       <th>Ұтыс</th>
+       <th id="probabilityHeader" class="hidden">Ықтималдық</th>
+       <th>Айналым</th>
+       <th>Күні</th>
+      </tr>
+     </thead>
      <tbody id="fortuneHistory"><tr><td colspan="5" class="muted">Тарих жүктелуде...</td></tr></tbody>
     </table>
    </div>
   </div>
  </section>
 
- <!-- ROP PANEL -->
  <section class="panel admin hidden" id="adminPanel">
   <div class="section-title">
    <h2>⚙️ РОП БАСҚАРУ ПАНЕЛІ</h2>
@@ -286,19 +301,34 @@ let celebrationTimer=null;
 let confettiAnimation=null;
 let wheelBusy=false;
 let fortuneUsedByManager={};
+let fortuneHistoryRows=[];
 
 const PRIZES=[
- {name:"Gorilla",label:"🥤 Gorilla энергетикалық сусыны",probability:25},
- {name:"2000 KZT",label:"💸 2 000 ₸",probability:10},
- {name:"Taxi",label:"🚕 Такси",probability:10},
+ {name:"Gorilla",label:"🥤 Gorilla",probability:25},
+ {name:"2000 KZT",label:"2 000 ₸",probability:10},
+ {name:"Taxi",label:"🚕 Taxi",probability:10},
  {name:"Lunch",label:"🍔 Обед",probability:15},
  {name:"Coffee",label:"☕ Кофе",probability:15},
- {name:"AirPods",label:"🎧 AirPods",probability:3},
- {name:"1 day off",label:"🌴 1 күн демалыс",probability:2},
- {name:"Dyson",label:"💨 Dyson",probability:1},
- {name:"1 hour off",label:"⏳ 1 сағат демалыс",probability:5},
- {name:"5000 KZT",label:"💰 5 000 ₸",probability:4},
- {name:"0 KZT",label:"🥲 0 ₸ — ұтыс жоқ",probability:10}
+ {name:"AirPods",label:"🎧",probability:3},
+ {name:"1 day off",label:"🌴",probability:2},
+ {name:"Dyson",label:"💨",probability:1},
+ {name:"1 hour off",label:"1 сағ.",probability:5},
+ {name:"5000 KZT",label:"5 000 ₸",probability:4},
+ {name:"0 KZT",label:"0 ₸",probability:10}
+];
+
+const PRIZE_LIST_LABELS=[
+ "🥤 Gorilla",
+ "💸 2 000 ₸",
+ "🚕 Такси",
+ "🍔 Обед",
+ "☕ Кофе",
+ "🎧 AirPods",
+ "🌴 1 күн демалыс",
+ "💨 Dyson",
+ "⏳ 1 сағат демалыс",
+ "💰 5 000 ₸",
+ "🥲 0 ₸"
 ];
 
 const money=n=>new Intl.NumberFormat("kk-KZ").format(Number(n)||0)+" ₸";
@@ -306,23 +336,59 @@ const pct=(s,p)=>p>0?Math.round(s/p*100):0;
 const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
 
+/* WHEEL LABELS — СЕКТОР ОРТАЛАРЫ */
 function renderWheelLabels(){
  const disc=document.getElementById("wheelDisc");
  let cumulative=0;
- disc.innerHTML=PRIZES.map(p=>{
-  const center=cumulative+p.probability*1.8;
-  cumulative+=p.probability*3.6;
-  return `<div class="wheel-label" style="transform:rotate(${center}deg)">${safe(p.label)}</div>`;
+
+ const wheelLabels=[
+  "🥤 Gorilla",
+  "2 000 ₸",
+  "🚕 Taxi",
+  "🍔 Обед",
+  "☕ Кофе",
+  "🎧",
+  "🌴",
+  "💨",
+  "1 сағ.",
+  "5 000 ₸",
+  "0 ₸"
+ ];
+
+ disc.innerHTML=PRIZES.map((p,i)=>{
+  const center=-90+cumulative*3.6+p.probability*1.8;
+  cumulative+=p.probability;
+
+  return `
+   <div class="wheel-label"
+    style="transform:rotate(${center}deg) translateX(42px) rotate(${-center}deg)">
+    <span>${safe(wheelLabels[i])}</span>
+   </div>`;
  }).join("");
 }
 
+/* PRIZE LIST — ПАЙЫЗ ТЕК РОП-ҚА */
+function renderPrizeList(){
+ const list=document.getElementById("prizeList");
+
+ list.innerHTML=PRIZES.map((p,i)=>`
+  <div class="prize-item">
+   <span>${safe(PRIZE_LIST_LABELS[i])}</span>
+   ${isROP?`<b>${p.probability}%</b>`:""}
+  </div>
+ `).join("");
+}
+
+/* LOAD DATA */
 async function load(){
  const {data,error}=await db.from("managers").select("*").order("sales",{ascending:false});
+
  if(error){
   const n=document.getElementById("notice");
   if(n)n.textContent=error.message;
   return;
  }
+
  const newManagers=data||[];
  const sorted=[...newManagers].sort((a,b)=>Number(b.sales||0)-Number(a.sales||0));
  const newLeader=sorted[0]||null;
@@ -335,6 +401,7 @@ async function load(){
  previousLeaderId=newLeaderId;
  hasLoadedOnce=true;
  managers=newManagers;
+
  render();
  refreshFortuneManagerOptions();
  await loadFortuneHistory();
@@ -365,6 +432,7 @@ function render(){
 function card(m,i,top){
  const p=pct(Number(m.sales||0),Number(m.plan||0));
  const isLeader=i===0;
+
  return `<div class="${top?'manager '+(isLeader?'first':''):'rank-row'}">
   <div class="${top?'rank':''}">${top?["🥇","🥈","🥉","4","5"][i]:String(i+1).padStart(2,"0")}</div>
   <img class="avatar" src="${safe(photo(m))}" onerror="this.src='https://placehold.co/100x100/26344a/ffffff?text=D'">
@@ -392,6 +460,7 @@ function celebrateChampion(manager){
  void overlay.offsetWidth;
  overlay.classList.add("active");
  startConfetti();
+
  clearTimeout(celebrationTimer);
  celebrationTimer=setTimeout(()=>{
   overlay.classList.remove("active");
@@ -400,13 +469,16 @@ function celebrateChampion(manager){
 }
 
 let particles=[];
+
 function startConfetti(){
  stopConfetti();
+
  const canvas=document.getElementById("confettiCanvas");
  const ctx=canvas.getContext("2d");
  canvas.width=window.innerWidth*devicePixelRatio;
  canvas.height=window.innerHeight*devicePixelRatio;
  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+
  const w=window.innerWidth,h=window.innerHeight;
  particles=[];
  const colors=["#ffd76b","#ffffff","#e5a92e","#f7c84c","#f5e6ad","#d88c20","#ff8c42"];
@@ -417,45 +489,82 @@ function startConfetti(){
    particles.push({
     x,y:h*.65+Math.random()*h*.25,
     vx:(side===0?1:-1)*(Math.random()*8+2)+(Math.random()-.5)*3,
-    vy:-(Math.random()*15+5),gravity:.16+Math.random()*.13,
-    size:Math.random()*8+4,rotation:Math.random()*Math.PI,
-    spin:(Math.random()-.5)*.25,color:colors[Math.floor(Math.random()*colors.length)],
-    life:180+Math.random()*100,shape:Math.random()>.5?"rect":"circle"
+    vy:-(Math.random()*15+5),
+    gravity:.16+Math.random()*.13,
+    size:Math.random()*8+4,
+    rotation:Math.random()*Math.PI,
+    spin:(Math.random()-.5)*.25,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    life:180+Math.random()*100,
+    shape:Math.random()>.5?"rect":"circle"
    });
   }
  }
+
  for(let i=0;i<130;i++){
   particles.push({
-   x:Math.random()*w,y:-Math.random()*h,vx:(Math.random()-.5)*3,
-   vy:Math.random()*3+1,gravity:.035,size:Math.random()*7+3,
-   rotation:Math.random()*Math.PI,spin:(Math.random()-.5)*.18,
+   x:Math.random()*w,y:-Math.random()*h,
+   vx:(Math.random()-.5)*3,
+   vy:Math.random()*3+1,
+   gravity:.035,
+   size:Math.random()*7+3,
+   rotation:Math.random()*Math.PI,
+   spin:(Math.random()-.5)*.18,
    color:colors[Math.floor(Math.random()*colors.length)],
-   life:250+Math.random()*120,shape:Math.random()>.5?"rect":"circle"
+   life:250+Math.random()*120,
+   shape:Math.random()>.5?"rect":"circle"
   });
  }
+
  drawConfetti();
 }
+
 function drawConfetti(){
  const canvas=document.getElementById("confettiCanvas");
  const ctx=canvas.getContext("2d");
  const w=window.innerWidth,h=window.innerHeight;
+
  ctx.clearRect(0,0,w,h);
  particles=particles.filter(p=>p.life>0&&p.y<h+40);
+
  particles.forEach(p=>{
-  p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.vx*=.994;p.rotation+=p.spin;p.life--;
-  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);
-  ctx.fillStyle=p.color;ctx.globalAlpha=Math.min(1,p.life/45);
+  p.x+=p.vx;
+  p.y+=p.vy;
+  p.vy+=p.gravity;
+  p.vx*=.994;
+  p.rotation+=p.spin;
+  p.life--;
+
+  ctx.save();
+  ctx.translate(p.x,p.y);
+  ctx.rotate(p.rotation);
+  ctx.fillStyle=p.color;
+  ctx.globalAlpha=Math.min(1,p.life/45);
+
   if(p.shape==="rect")ctx.fillRect(-p.size/2,-p.size/3,p.size,p.size*.65);
-  else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}
+  else{
+   ctx.beginPath();
+   ctx.arc(0,0,p.size/2,0,Math.PI*2);
+   ctx.fill();
+  }
   ctx.restore();
  });
+
  if(particles.length>0)confettiAnimation=requestAnimationFrame(drawConfetti);
  else stopConfetti();
 }
+
 function stopConfetti(){
- if(confettiAnimation){cancelAnimationFrame(confettiAnimation);confettiAnimation=null;}
+ if(confettiAnimation){
+  cancelAnimationFrame(confettiAnimation);
+  confettiAnimation=null;
+ }
+
  const canvas=document.getElementById("confettiCanvas");
- if(canvas){const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);}
+ if(canvas){
+  const ctx=canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+ }
  particles=[];
 }
 
@@ -463,32 +572,85 @@ function stopConfetti(){
 async function login(){
  const email=prompt("РОП email:");
  if(!email)return;
+
  const password=prompt("Құпиясөз:");
  if(!password)return;
+
  const {error}=await db.auth.signInWithPassword({email,password});
- if(error){alert(error.message);return;}
+
+ if(error){
+  alert(error.message);
+  return;
+ }
+
  await checkROP();
 }
+
 async function checkROP(){
  const {data:{user}}=await db.auth.getUser();
+
  if(!user){
   isROP=false;
   document.getElementById("adminPanel").classList.add("hidden");
+  document.body.classList.remove("rop-view");
+  renderPrizeList();
+  renderFortuneHistoryVisibility();
+  renderFortuneHistory();
   render();
   return;
  }
+
  const {data,error}=await db.from("rop_users").select("user_id").eq("user_id",user.id).maybeSingle();
+
  isROP=!!data&&!error;
+
+ document.body.classList.toggle("rop-view",isROP);
  document.getElementById("adminPanel").classList.toggle("hidden",!isROP);
+
  if(!isROP)alert("Бұл аккаунтқа РОП рұқсаты берілмеген.");
+
+ renderPrizeList();
+ renderFortuneHistoryVisibility();
+ renderFortuneHistory();
  render();
 }
+
 async function logout(){
  await db.auth.signOut();
  isROP=false;
+ document.body.classList.remove("rop-view");
  document.getElementById("adminPanel").classList.add("hidden");
+ renderPrizeList();
+ renderFortuneHistoryVisibility();
+ renderFortuneHistory();
  render();
 }
+
+function renderFortuneHistoryVisibility(){
+ document.getElementById("probabilityHeader").classList.toggle("hidden",!isROP);
+}
+
+function renderFortuneHistory(){
+ const body=document.getElementById("fortuneHistory");
+ const colspan=isROP?5:4;
+
+ if(!fortuneHistoryRows.length){
+  body.innerHTML=`<tr><td colspan="${colspan}" class="muted">Әзірге ұтыс болған жоқ.</td></tr>`;
+  return;
+ }
+
+ body.innerHTML=fortuneHistoryRows.map(r=>`
+  <tr>
+   <td>${safe(r.manager_name||"Менеджер")}</td>
+   <td>${safe(r.prize)}</td>
+   ${isROP?`<td>${Number(r.probability)||0}%</td>`:""}
+   <td>#${Number(r.spin_number)||1}</td>
+   <td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td>
+  </tr>
+ `).join("");
+}
+
+/* MANAGER FORM */
 function resetForm(){
  document.getElementById("managerForm").reset();
  document.getElementById("managerId").value="";
@@ -498,10 +660,13 @@ function resetForm(){
 /* PHOTO UPLOAD */
 async function uploadManagerPhoto(file){
  if(!file)return null;
+
  const ext=file.name.split(".").pop().toLowerCase();
  const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
  const {error}=await db.storage.from("manager-photos").upload(fileName,file,{upsert:true});
  if(error)throw error;
+
  const {data}=db.storage.from("manager-photos").getPublicUrl(fileName);
  return data.publicUrl;
 }
@@ -540,6 +705,7 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
   };
 
   let saved;
+
   if(id){
    const {data,error}=await db.from("managers").update(item).eq("id",id).select().single();
    if(error)throw error;
@@ -555,6 +721,7 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
     p_manager_id:String(saved.id),
     p_pin:pin
    });
+
    if(error)throw new Error("Менеджер сақталды, бірақ PIN орнатылмады: "+error.message);
   }
 
@@ -573,6 +740,7 @@ document.getElementById("managerForm").addEventListener("submit",async e=>{
 function editManager(id){
  const m=managers.find(x=>String(x.id)===String(id));
  if(!m)return;
+
  document.getElementById("managerId").value=m.id;
  document.getElementById("name").value=m.name;
  document.getElementById("photo").value=m.photo_url||"";
@@ -584,9 +752,12 @@ function editManager(id){
  document.getElementById("formTitle").textContent="Менеджерді өңдеу";
  document.getElementById("managerForm").scrollIntoView({behavior:"smooth"});
 }
+
 async function deleteManager(id){
  if(!isROP||!confirm("Менеджерді өшіресің бе?"))return;
+
  const {error}=await db.from("managers").delete().eq("id",id);
+
  if(error)alert(error.message);
  else await load();
 }
@@ -595,14 +766,18 @@ async function deleteManager(id){
 function refreshFortuneManagerOptions(){
  const select=document.getElementById("fortuneManager");
  const selected=select.value;
+
  select.innerHTML='<option value="">Менеджерді таңда...</option>'+
   [...managers].sort((a,b)=>String(a.name).localeCompare(String(b.name),"kk"))
   .map(m=>`<option value="${safe(m.id)}">${safe(m.name)}</option>`).join("");
+
  if(managers.some(m=>String(m.id)===selected))select.value=selected;
 }
+
 function getSelectedManager(){
  return managers.find(m=>String(m.id)===document.getElementById("fortuneManager").value);
 }
+
 function updateSpinAvailability(){
  const manager=getSelectedManager();
  const pin=document.getElementById("fortunePin").value.trim();
@@ -629,8 +804,10 @@ function updateSpinAvailability(){
 document.getElementById("fortuneManager").addEventListener("change",()=>{
  document.getElementById("spinResult").innerHTML=
   '<strong>Сәттілік серік болсын!</strong><span>PIN енгізіп, айналдыруды баста.</span>';
+
  updateSpinAvailability();
 });
+
 document.getElementById("fortunePin").addEventListener("input",updateSpinAvailability);
 
 async function loadFortuneHistory(){
@@ -638,11 +815,13 @@ async function loadFortuneHistory(){
  const {data,error}=await db.rpc("get_fortune_history");
 
  if(error){
-  body.innerHTML=`<tr><td colspan="5" class="muted">Тарих жүктелмеді: ${safe(error.message)}</td></tr>`;
+  body.innerHTML=`<tr><td colspan="${isROP?5:4}" class="muted">Тарих жүктелмеді: ${safe(error.message)}</td></tr>`;
   return;
  }
 
  const rows=Array.isArray(data)?data:[];
+ fortuneHistoryRows=rows;
+
  fortuneUsedByManager={};
 
  rows.forEach(r=>{
@@ -650,20 +829,13 @@ async function loadFortuneHistory(){
   fortuneUsedByManager[key]=(fortuneUsedByManager[key]||0)+1;
  });
 
- body.innerHTML=rows.length?rows.map(r=>`
-  <tr>
-   <td>${safe(r.manager_name||"Менеджер")}</td>
-   <td>${safe(r.prize)}</td>
-   <td>${Number(r.probability)||0}%</td>
-   <td>#${Number(r.spin_number)||1}</td>
-   <td>${r.created_at?new Date(r.created_at).toLocaleString("kk-KZ"):"—"}</td>
-  </tr>`).join(""):'<tr><td colspan="5" class="muted">Әзірге ұтыс болған жоқ.</td></tr>';
-
+ renderFortuneHistory();
  updateSpinAvailability();
 }
 
 function normalizePrizeName(value){
  const s=String(value||"").toLowerCase().trim();
+
  if(s.includes("gorilla")||s.includes("горилл"))return "Gorilla";
  if(s.includes("2000")||s.includes("2 000"))return "2000 KZT";
  if(s.includes("taxi")||s.includes("такси"))return "Taxi";
@@ -672,9 +844,10 @@ function normalizePrizeName(value){
  if(s.includes("airpods"))return "AirPods";
  if(s.includes("1 day")||s.includes("1 күн"))return "1 day off";
  if(s.includes("dyson"))return "Dyson";
- if(s.includes("1 hour")||s.includes("1 сағат"))return "1 hour off";
+ if(s.includes("1 hour")||s.includes("1 сағат")||s.includes("1 сағ"))return "1 hour off";
  if(s.includes("5000")||s.includes("5 000"))return "5000 KZT";
  if(s.includes("0 kzt")||s.includes("0 ₸")||s.includes("no prize")||s.includes("ұтыс жоқ"))return "0 KZT";
+
  return value;
 }
 
@@ -685,6 +858,7 @@ function animateWheel(prizeName){
  const index=PRIZES.indexOf(prize);
  const before=PRIZES.slice(0,index).reduce((sum,p)=>sum+p.probability,0);
  const center=(before+prize.probability/2)*3.6;
+
  const disc=document.getElementById("wheelDisc");
  const current=Number(disc.dataset.rotation||0);
  const normalized=((current%360)+360)%360;
@@ -713,6 +887,7 @@ async function spinFortune(){
 
  const button=document.getElementById("spinButton");
  button.textContent="ДӨҢГЕЛЕК АЙНАЛЫП ЖАТЫР...";
+
  document.getElementById("spinResult").innerHTML=
   "<strong>🍀 Сәттілік!</strong><span>Нәтиже серверден расталып жатыр...</span>";
 
@@ -734,9 +909,14 @@ async function spinFortune(){
   await animateWheel(prizeName);
 
   const prize=PRIZES.find(p=>p.name===normalizePrizeName(prizeName));
+
+  const probabilityInfo=isROP
+   ? `Ықтималдық: ${Number(result.probability)||0}% • `
+   : "";
+
   document.getElementById("spinResult").innerHTML=`
    <strong>${safe(prize?prize.label:String(prizeName))}</strong>
-   <span>Ықтималдық: ${Number(result.probability)||0}% • Айналым: #${Number(result.spin_number)||1}</span>`;
+   <span>${probabilityInfo}Айналым: #${Number(result.spin_number)||1}</span>`;
 
   document.getElementById("fortunePin").value="";
   await loadFortuneHistory();
@@ -744,7 +924,9 @@ async function spinFortune(){
  }catch(error){
   document.getElementById("spinResult").innerHTML=
    `<strong>Айналдыру орындалмады</strong><span>${safe(error.message||"Белгісіз қате")}</span>`;
+
   alert("Қате: "+(error.message||"Айналдыру орындалмады"));
+
  }finally{
   wheelBusy=false;
   button.textContent="🎡 АЙНАЛДЫРУ";
@@ -755,20 +937,26 @@ async function spinFortune(){
 /* TV MODE */
 function tvMode(){
  document.body.classList.toggle("tv");
+
  document.querySelectorAll(".admin,header button").forEach(x=>{
   x.style.display=document.body.classList.contains("tv")?"none":"";
  });
+
  document.querySelector(".hero").scrollIntoView();
 }
 
 /* AUTH + INITIAL LOAD */
 db.auth.onAuthStateChange(()=>setTimeout(checkROP,200));
+
 renderWheelLabels();
+renderPrizeList();
 load();
+checkROP();
 setInterval(load,15000);
 </script>
 </body>
 </html>
+
 
 
 
