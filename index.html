@@ -87,25 +87,27 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .wheel-wrap{width:min(76vw,390px);aspect-ratio:1;position:relative;margin:12px auto 20px;filter:drop-shadow(0 10px 25px #0009)}
 .wheel-pointer{position:absolute;z-index:5;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-top:38px solid #fff0a4;filter:drop-shadow(0 3px 5px #000)}
 .wheel-outer{position:absolute;inset:0;border-radius:50%;padding:9px;background:linear-gradient(135deg,#fff0a8,#a97822,#f5d77d,#805515);box-shadow:0 0 0 3px #30230e,0 0 30px #e8b94c44}
-.wheel-disc{width:100%;height:100%;border-radius:50%;border:4px solid #30230e;position:relative;overflow:hidden;background:conic-gradient(from -90deg,#25a56a 0% 25%,#b78b2c 25% 35%,#4c84b8 35% 45%,#bd613f 45% 60%,#7856a6 60% 75%,#397d9b 75% 78%,#568b54 78% 80%,#d2a8e8 80% 81%,#6b8196 81% 86%,#c79b3c 86% 90%,#4b5362 90% 100%);transition:transform 6s cubic-bezier(.12,.75,.08,1)}
+.wheel-disc{width:100%;height:100%;border-radius:50%;border:4px solid #30230e;position:relative;overflow:hidden;background:#27344a;transition:transform 6s cubic-bezier(.12,.75,.08,1)}
 .wheel-label{
  position:absolute;
  left:50%;
  top:50%;
- width:86px;
+ width:78px;
  height:24px;
+ margin-left:-39px;
  margin-top:-12px;
- transform-origin:0 50%;
+ transform-origin:center center;
  display:flex;
  align-items:center;
  justify-content:center;
- font-size:clamp(9px,2vw,12px);
+ font-size:clamp(9px,2.5vw,12px);
  font-weight:900;
  color:#fff;
  text-shadow:0 2px 4px #000,0 0 5px #000;
  text-align:center;
  white-space:nowrap;
  pointer-events:none;
+ z-index:2;
 }
 .wheel-label span{display:block;width:100%;text-align:center}
 .wheel-hub{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,#fff0a8,#b78325);border:5px solid #49330d;display:flex;align-items:center;justify-content:center;color:#231807;font-weight:1000;font-size:15px;box-shadow:0 0 15px #0009}
@@ -130,17 +132,17 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 .tv .fortune-panel{display:none}
 
 @media(max-width:700px){
-.stats{grid-template-columns:1fr 1fr}
-.stat:last-child{grid-column:span 2}
-.form-grid{grid-template-columns:1fr}
-.container{padding:18px 4%}
-.champion-photo-wrap{width:135px;height:135px}
-.rank-row{gap:8px;padding:10px}
-.rank-row .avatar{width:43px;height:43px}
-.rank-row .details{font-size:10px}
-.fortune-layout{grid-template-columns:1fr}
-.fortune-panel{padding:16px}
-.wheel-wrap{width:min(82vw,350px)}
+ .stats{grid-template-columns:1fr 1fr}
+ .stat:last-child{grid-column:span 2}
+ .form-grid{grid-template-columns:1fr}
+ .container{padding:18px 4%}
+ .champion-photo-wrap{width:135px;height:135px}
+ .rank-row{gap:8px;padding:10px}
+ .rank-row .avatar{width:43px;height:43px}
+ .rank-row .details{font-size:10px}
+ .fortune-layout{grid-template-columns:1fr}
+ .fortune-panel{padding:16px}
+ .wheel-wrap{width:min(82vw,350px)}
 }
 @media print{button,.admin,.fortune-panel{display:none}}
 </style>
@@ -206,7 +208,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
     <div class="muted">Әр толық 1 млн ₸ сатылым үшін бір айналдыру беріледі.</div>
     <div class="spin-count" id="availableSpins">— айналдыру</div>
     <div class="muted" id="spinProgress">Менеджер таңдалмаған</div>
-
     <div class="prize-list" id="prizeList"></div>
    </div>
   </div>
@@ -240,13 +241,10 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 
   <form id="managerForm">
    <input type="hidden" id="managerId">
-
    <label>Менеджер аты</label>
    <input id="name" required placeholder="Мысалы: Айдос">
-
    <label>Фото URL</label>
    <input id="photo" placeholder="Фото сілтемесі">
-
    <label>Галереядан фото жүктеу</label>
    <input id="photoFile" type="file" accept="image/png,image/jpeg,image/webp">
 
@@ -257,7 +255,6 @@ footer{text-align:center;padding:30px;color:#65738a;font-size:11px}
 
    <label>Чек саны</label>
    <input id="checks" type="number" min="0" required>
-
    <label>Менеджердің 4 таңбалы PIN-коды</label>
    <input id="managerPin" type="password" inputmode="numeric" maxlength="4" placeholder="Жаңа менеджерге міндетті" autocomplete="new-password">
    <div class="pin-help">Жаңа менеджерге PIN міндетті. Өңдеу кезінде бос қалдырсаң, бұрынғы PIN өзгермейді.</div>
@@ -336,12 +333,26 @@ const pct=(s,p)=>p>0?Math.round(s/p*100):0;
 const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const photo=m=>m.photo_url||"https://placehold.co/100x100/26344a/ffffff?text=D";
 
-/* WHEEL LABELS — СЕКТОР ОРТАЛАРЫ */
+/* WHEEL: 11 СЕКТОР ЖӘНЕ ӘР СЕКТОРДЫҢ ДӘЛ ОРТАСЫНДАҒЫ ЖАЗУ */
 function renderWheelLabels(){
  const disc=document.getElementById("wheelDisc");
- let cumulative=0;
+ if(!disc)return;
 
- const wheelLabels=[
+ const colors=[
+  "#25a56a",
+  "#b78b2c",
+  "#4c84b8",
+  "#bd613f",
+  "#7856a6",
+  "#397d9b",
+  "#568b54",
+  "#d2a8e8",
+  "#6b8196",
+  "#c79b3c",
+  "#4b5362"
+ ];
+
+ const labels=[
   "🥤 Gorilla",
   "2 000 ₸",
   "🚕 Taxi",
@@ -355,16 +366,31 @@ function renderWheelLabels(){
   "0 ₸"
  ];
 
- disc.innerHTML=PRIZES.map((p,i)=>{
-  const center=-90+cumulative*3.6+p.probability*1.8;
-  cumulative+=p.probability;
+ let cumulative=0;
+ const gradient=[];
+ const radius=disc.clientWidth*0.32;
 
-  return `
-   <div class="wheel-label"
-    style="transform:rotate(${center}deg) translateX(42px) rotate(${-center}deg)">
-    <span>${safe(wheelLabels[i])}</span>
-   </div>`;
- }).join("");
+ disc.innerHTML="";
+
+ PRIZES.forEach((p,i)=>{
+  const start=cumulative;
+  const end=cumulative+p.probability;
+
+  gradient.push(`${colors[i]} ${start}% ${end}%`);
+
+  const angle=(start+p.probability/2)*3.6;
+
+  const label=document.createElement("div");
+  label.className="wheel-label";
+  label.style.transform=
+   `rotate(${angle}deg) translateY(-${radius}px) rotate(${-angle}deg)`;
+  label.innerHTML=`<span>${safe(labels[i])}</span>`;
+
+  disc.appendChild(label);
+  cumulative=end;
+ });
+
+ disc.style.background=`conic-gradient(from -90deg,${gradient.join(",")})`;
 }
 
 /* PRIZE LIST — ПАЙЫЗ ТЕК РОП-ҚА */
@@ -953,9 +979,17 @@ renderPrizeList();
 load();
 checkROP();
 setInterval(load,15000);
+
+/* SCREEN RESIZE: WHEEL LABEL POSITION UPDATE */
+let wheelResizeTimer;
+window.addEventListener("resize",()=>{
+ clearTimeout(wheelResizeTimer);
+ wheelResizeTimer=setTimeout(renderWheelLabels,150);
+});
 </script>
 </body>
 </html>
+
 
 
 
