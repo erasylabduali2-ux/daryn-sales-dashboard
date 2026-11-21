@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DARYN | HALL OF FAME</title>
+<meta name="theme-color" content="#080d18">
+<meta name="description" content="DARYN ONLINE үздік менеджерлерінің рекордтары мен жетістіктері">
+
+<link rel="icon" type="image/png" href="./logo.png">
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#080d18;
+  --panel:#121d30;
+  --gold:#f2c66d;
+  --gold-light:#ffe6a0;
+  --muted:#a1aec3;
+  --border:#4b3d28;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 0%,#342913 0%,transparent 42%),
+    radial-gradient(ellipse at 90% 70%,#192740 0%,transparent 42%),
+    var(--bg);
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+header{
+  padding:20px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  border-bottom:1px solid #293448;
+  background:#080d18cc;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:24px;
+  font-weight:900;
+  color:var(--gold);
+  letter-spacing:2px;
+}
+
+.logo img{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  border-radius:50%;
+}
+
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 17px;
+  border-radius:10px;
+  background:#263349;
+  color:white;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+  transition:.25s;
+}
+
+.back-btn:hover{
+  background:#40516e;
+  transform:translateY(-2px);
+}
+
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:35px 5% 65px;
+}
+
+.hero{
+  text-align:center;
+  padding:45px 0 55px;
+}
+
+.hero-label{
+  color:var(--gold);
+  letter-spacing:5px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero h1{
+  font-size:clamp(42px,8vw,82px);
+  line-height:1.1;
+  letter-spacing:4px;
+  margin:20px 0;
+  color:var(--gold-light);
+  text-shadow:0 0 35px #e9ad4540;
+}
+
+.hero p{
+  color:#b3bfd1;
+  font-size:clamp(13px,2vw,17px);
+  line-height:1.8;
+  max-width:620px;
+  margin:0 auto;
+}
+
+.gold-line{
+  width:125px;
+  height:3px;
+  margin:28px auto;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--gold),
+    transparent
+  );
+}
+
+.legends-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:28px;
+}
+
+.legend-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:23px;
+  border:1px solid #816536;
+  background:linear-gradient(
+    145deg,
+    #1e2b41,
+    #0e1727
+  );
+  box-shadow:0 20px 55px #0007;
+  transition:transform .3s,box-shadow .3s;
+}
+
+.legend-card:hover{
+  transform:translateY(-7px);
+  box-shadow:0 25px 65px #d4a94b25;
+}
+
+.legend-photo{
+  position:relative;
+  height:480px;
+  overflow:hidden;
+  background:linear-gradient(
+    145deg,
+    #303c52,
+    #101827
+  );
+}
+
+.legend-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 25%;
+  display:block;
+  transition:transform .5s;
+}
+
+.legend-card:hover .legend-photo img{
+  transform:scale(1.04);
+}
+
+.photo-gradient{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    transparent 40%,
+    #101827 100%
+  );
+  pointer-events:none;
+}
+
+.record-badge{
+  position:absolute;
+  top:20px;
+  left:20px;
+  padding:12px 17px;
+  background:#0c1426e8;
+  color:var(--gold);
+  border:1px solid #bd9954;
+  border-radius:30px;
+  font-weight:900;
+  letter-spacing:1px;
+  font-size:12px;
+}
+
+.legend-content{
+  padding:25px 30px 32px;
+  text-align:center;
+}
+
+.legend-name{
+  margin:0;
+  font-size:clamp(29px,4vw,41px);
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.legend-role{
+  margin:12px 0;
+  color:#a9b7ca;
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+.record-value{
+  margin:20px 0 8px;
+  color:var(--gold-light);
+  font-size:clamp(35px,5vw,53px);
+  font-weight:900;
+  text-shadow:0 0 25px #e9b74725;
+}
+
+.record-description{
+  color:#aebbd0;
+  font-size:13px;
+}
+
+.quote{
+  margin:27px 0;
+  padding:22px;
+  border-top:1px solid #3e4a5c;
+  border-bottom:1px solid #3e4a5c;
+  color:#e5e9f1;
+  font-size:15px;
+  line-height:1.9;
+  font-style:italic;
+}
+
+.bonus-box{
+  padding:23px 15px;
+  border-radius:15px;
+  background:linear-gradient(
+    135deg,
+    #423319,
+    #1d251f,
+    #332918
+  );
+  border:1px solid #97783d;
+}
+
+.bonus-label{
+  color:#d9c595;
+  font-size:12px;
+  letter-spacing:2px;
+  font-weight:700;
+}
+
+.bonus-amount{
+  margin:10px 0;
+  color:#ffe49a;
+  font-size:clamp(30px,4vw,43px);
+  font-weight:900;
+}
+
+.bonus-description{
+  color:#e1d4b4;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.motivation{
+  margin-top:50px;
+  padding:35px 25px;
+  text-align:center;
+  background:linear-gradient(
+    145deg,
+    #1c2940,
+    #121b2d
+  );
+  border:1px solid #6b5431;
+  border-radius:20px;
+}
+
+.motivation h2{
+  color:var(--gold-light);
+  font-size:clamp(23px,4vw,35px);
+  margin:0 0 15px;
+}
+
+.motivation p{
+  color:#d2dbe8;
+  line-height:1.9;
+  font-size:15px;
+  max-width:700px;
+  margin:0 auto;
+}
+
+.motivation strong{
+  color:var(--gold);
+}
+
+.bottom-action{
+  margin-top:25px;
+  display:inline-block;
+  background:linear-gradient(
+    135deg,
+    #f6d88c,
+    #c99a3c
+  );
+  color:#171a21;
+  font-size:14px;
+  font-weight:900;
+  text-decoration:none;
+  padding:15px 25px;
+  border-radius:10px;
+  transition:.25s;
+}
+
+.bottom-action:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 25px #d6ac5044;
+}
+
+footer{
+  text-align:center;
+  padding:30px 15px;
+  border-top:1px solid #263348;
+  color:#7e8ca3;
+  font-size:12px;
+  letter-spacing:1px;
+}
+
+@media(max-width:800px){
+  .legends-grid{
+    grid-template-columns:1fr;
+    max-width:550px;
+    margin:auto;
+  }
+
+  .legend-photo{
+    height:440px;
+  }
+
+  .hero{
+    padding:35px 0 40px;
+  }
+}
+
+@media(max-width:480px){
+  header{
+    padding:15px 4%;
+  }
+
+  .logo{
+    font-size:19px;
+  }
+
+  .logo img{
+    width:42px;
+    height:42px;
+  }
+
+  .back-btn{
+    padding:10px 12px;
+    font-size:11px;
+  }
+
+  .container{
+    padding:20px 4% 45px;
+  }
+
+  .legend-photo{
+    height:390px;
+  }
+
+  .legend-content{
+    padding:22px 18px 25px;
+  }
+
+  .record-badge{
+    font-size:10px;
+    padding:10px 13px;
+  }
+
+  .quote{
+    font-size:14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <img src="./logo.png" alt="DARYN">
+    <span>DARYN.</span>
+  </div>
+
+  <a class="back-btn" href="./index.html">
+    ← БАСТЫ БЕТКЕ
+  </a>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-label">
+      DARYN ONLINE • SALES LEGENDS
+    </div>
+
+    <h1>HALL OF FAME</h1>
+
+    <div class="gold-line"></div>
+
+    <p>
+      Бұл жерде жай ғана менеджерлер емес,
+      өз еңбегімен ерекше нәтиже көрсеткен
+      DARYN SALES үздіктері тұрады.
+      Олардың рекорды — сенің келесі мақсатың!
+    </p>
+  </section>
+
+  <section class="legends-grid">
+
+    <!-- АЛЬТАЙР -->
+
+    <article class="legend-card">
+
+      <div class="legend-photo">
+        <img
+          src="./altair.jpg"
+          alt="Альтайрдың фотосы"
+          onerror="this.onerror=null;this.src='./logo.png';this.style.objectFit='contain';this.style.padding='90px'"
+        >
+
+        <div class="photo-gradient"></div>
+
+        <div class="record-badge">
+          👑 АЙЛЫҚ РЕКОРД
+        </div>
+      </div>
+
+      <div class="legend-content">
+
+        <h2 class="legend-name">АЛЬТАЙР</h2>
+
+        <div class="legend-role">
+          DARYN SALES • MONTHLY CHAMPION
+        </div>
+
+        <div class="record-value">
+          9 000 000 ₸
+        </div>
+
+        <div class="record-description">
+          1 ай ішіндегі сатылым рекорды
+        </div>
+
+        <div class="quote">
+          «Үлкен нәтижеге жету үшін
+          үлкен мүмкіндік күтудің қажеті жоқ.
+          Күн сайын өзіңнен кешегіден
+          жақсырақ нәтиже талап ет!»
+        </div>
+
+        <div class="bonus-box">
+
+          <div class="bonus-label">
+            🏆 РЕКОРДТЫ ЖАҢАРТ
+          </div>
+
+          <div class="bonus-amount">
+            +50 000 ₸
+          </div>
+
+          <div class="bonus-description">
+            Бір айда 9 000 000 ₸-ден
+            көп сатылым жасаған менеджерге бонус!
+          </div>
+
+        </div>
+
+      </div>
+    </article>
+
+    <!-- ЕРАСЫЛ -->
+
+    <article class="legend-card">
+
+      <div class="legend-photo">
+        <img
+          src="./erassyl.jpg"
+          alt="Ерасылдың фотосы"
+          onerror="this.onerror=null;this.src='./logo.png';this.style.objectFit='contain';this.style.padding='90px'"
+        >
+
+        <div class="photo-gradient"></div>
+
+        <div class="record-badge">
+          ⚡ КҮНДІК РЕКОРД
+        </div>
+      </div>
+
+      <div class="legend-content">
+
+        <h2 class="legend-name">ЕРАСЫЛ</h2>
+
+        <div class="legend-role">
+          DARYN SALES • DAILY CHAMPION
+        </div>
+
+        <div class="record-value">
+          5 ЧЕК
+        </div>
+
+        <div class="record-description">
+          1 күн ішіндегі сатылым рекорды
+        </div>
+
+        <div class="quote">
+          «Бір күнде бәрін өзгерту мүмкін.
+          Бастысы — қанша мүмкіндік келгені емес,
+          сол мүмкіндіктің қаншасын
+          нәтижеге айналдырғаның!»
+        </div>
+
+        <div class="bonus-box">
+
+          <div class="bonus-label">
+            ⚡ РЕКОРДТЫ ЖАҢАРТ
+          </div>
+
+          <div class="bonus-amount">
+            +20 000 ₸
+          </div>
+
+          <div class="bonus-description">
+            Бір күнде 5 чектен көп
+            сатылым жасаған менеджерге бонус!
+          </div>
+
+        </div>
+
+      </div>
+    </article>
+
+  </section>
+
+  <section class="motivation">
+
+    <h2>👑 КЕЛЕСІ АҢЫЗ — СЕН!</h2>
+
+    <p>
+      Бүгін бұл тақтада Альтайр мен Ерасыл тұр.
+      Ертең олардың орнында <strong>сенің атың</strong>
+      тұруы мүмкін.
+      <strong>Рекордты жаңарт. Бонусты ал.
+      Өз атыңды DARYN тарихына жаз!</strong>
+    </p>
+
+    <a class="bottom-action" href="./index.html">
+      🔥 РЕЙТИНГКЕ ҚАЙТУ
+    </a>
+
+  </section>
+
+</main>
+
+<footer>
+  DARYN ONLINE © 2026 • HALL OF FAME
+</footer>
+
+</body>
+</html>
