@@ -117,10 +117,10 @@ header{padding:14px 4%}
 
 <script>
 
-const URL = 'https://bvydfvsmglnnezkodsgz.supabase.co';
+const URL = "https://bvydfvsmglnnezkodsgz.supabase.co";
+const KEY = "sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00";
+const db = supabase.createClient(URL, KEY);
 
-const KEY='sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00';
-const db=supabase.createClient(URL,KEY);
 
 const sections=[
  ['company','🏢','Компаниямен танысу','Миссия, құндылықтар және корпоративтік мәдениет'],
