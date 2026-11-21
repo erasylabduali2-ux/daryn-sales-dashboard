@@ -266,8 +266,16 @@ $('categories').onclick=e=>{
   ?`<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(x.video_url)}">▶ ВИДЕОНЫ АШУ</a>`
   :'';
 
- $('lessonPanel').classList.remove('hidden');
- $('lessonPanel').scrollIntoView({behavior:'smooth'});
+
+$('lessonPanel').classList.remove('hidden');
+
+document.querySelector('.hero').classList.add('hidden');
+$('categories').classList.add('hidden');
+document.querySelector('.referral').classList.add('hidden');
+$('adminPanel').classList.add('hidden');
+
+window.scrollTo({top:0,behavior:'smooth'});
+
 };
 
 $('backBtn').onclick=()=>{
