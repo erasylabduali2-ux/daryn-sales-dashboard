@@ -278,10 +278,21 @@ window.scrollTo({top:0,behavior:'smooth'});
 
 };
 
+
 $('backBtn').onclick=()=>{
- $('lessonPanel').classList.add('hidden');
- $('categories').scrollIntoView({behavior:'smooth'});
+  $('lessonPanel').classList.add('hidden');
+
+  document.querySelector('.hero').classList.remove('hidden');
+  $('categories').classList.remove('hidden');
+  document.querySelector('.referral').classList.remove('hidden');
+
+  if(isROP){
+    $('adminPanel').classList.remove('hidden');
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
 };
+
 
 $('lessonForm').onsubmit=async e=>{
  e.preventDefault();
