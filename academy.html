@@ -1,25 +1,352 @@
+
 <!DOCTYPE html>
-<html lang="kk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DARYN SALES ACADEMY</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
-*{box-sizing:border-box}body{margin:0;background:#080d18;color:#f5f6fa;font-family:Arial,sans-serif}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 5%;border-bottom:1px solid #2b3447}.brand{font-size:20px;font-weight:900;color:#f3ca76}a{color:#f3ca76;text-decoration:none}button{border:0;border-radius:9px;background:#e6b957;color:#101521;padding:11px 15px;font-weight:800;cursor:pointer}.secondary{background:#263449;color:#fff}.wrap{max-width:1100px;margin:auto;padding:24px 5%}.hero{text-align:center;padding:30px 0}.hero h1{color:#f3ca76;font-size:clamp(30px,6vw,54px);margin:8px 0}.muted{color:#a2aec2;font-size:13px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}.card,.panel{background:linear-gradient(145deg,#172238,#101827);border:1px solid #334159;border-radius:16px;padding:20px}.card h3{color:#f3ca76}.card p{color:#b4bfd1;line-height:1.6}.panel{margin-top:22px}input,textarea,select{width:100%;padding:12px;background:#0a1423;border:1px solid #3b4a63;border-radius:9px;color:white;margin:7px 0 14px}textarea{min-height:120px}label{font-size:12px;color:#b5c2d5}.hidden{display:none!important}.content{white-space:pre-wrap;line-height:1.8;color:#e1e8f4}.actions{display:flex;gap:9px;flex-wrap:wrap}.tag{font-size:11px;color:#f3ca76;letter-spacing:2px}.empty{color:#a2aec2}.notice{color:#f3ca76;font-size:13px}.lesson{cursor:pointer}.lesson:hover{border-color:#e6b957}.referral{border-color:#a47a32}footer{text-align:center;padding:30px;color:#78859a;font-size:12px}@media(max-width:600px){header{padding:14px 4%}.wrap{padding:18px 4%}}</style></head><body>
-<header><div class="brand">🎓 DARYN SALES ACADEMY</div><div class="actions"><a href="./index.html">← SALES LEAGUE</a><button class="secondary" id="loginBtn">РОП КІРУ</button><button class="secondary hidden" id="logoutBtn">ШЫҒУ</button></div></header>
-<main class="wrap"><div class="hero"><div class="tag">DARYN ONLINE • SALES DEPARTMENT</div><h1>SALES ACADEMY</h1><p class="muted">БҮГІН СТАЖЕР — ЕРТЕҢ ЧЕМПИОН</p></div>
-<section class="grid" id="categories"></section>
-<section class="panel referral"><div class="tag">REFER A FRIEND</div><h2>🎁 ДОСЫҢДЫ ШАҚЫР — 2 000 ₸ АЛ!</h2><p class="content">Досыңды Daryn Online командасына шақыр. Досың стажировкаға қабылданып, бірінші сатылымын жасағанда саған 2 000 ₸ бонус беріледі. Әр шақырған досың үшін бонус бір рет төленеді.</p><button id="copyReferral">📋 ШАҚЫРУ МӘТІНІН КӨШІРУ</button></section>
-<section class="panel hidden" id="lessonPanel"><button class="secondary" id="backBtn">← БАРЛЫҚ САБАҚ</button><div class="tag" id="lessonCategory"></div><h2 id="lessonTitle"></h2><div class="content" id="lessonBody"></div><p id="lessonVideo"></p></section>
-<section class="panel hidden" id="adminPanel"><h2>⚙️ РОП • АКАДЕМИЯНЫ БАСҚАРУ</h2><p class="muted">Материалдарды тек РОП өзгерте алады. Жарияланған сабақтар стажерларға көрінеді.</p><p class="notice" id="adminNotice"></p><form id="lessonForm"><input type="hidden" id="lessonId"><label>Бөлім</label><select id="lessonSection"></select><label>Сабақ атауы</label><input id="titleInput" maxlength="160" required placeholder="Мысалы: Алғашқы қоңырау"><label>Сабақ мәтіні</label><textarea id="bodyInput" required placeholder="Сабақ мазмұнын енгіз..."></textarea><label>Видео сілтемесі (міндетті емес, https://)</label><input id="videoInput" type="url" placeholder="https://..."><label><input id="publishedInput" type="checkbox" style="width:auto;margin-right:8px" checked>Жариялау</label><div class="actions"><button type="submit">💾 САҚТАУ</button><button type="button" class="secondary" id="clearBtn">ТАЗАЛАУ</button></div></form><h3>Сабақтарды басқару</h3><div id="adminLessons"></div></section>
-</main><footer>DARYN ONLINE • SALES ACADEMY • 2026</footer>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DARYN SALES ACADEMY</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#f5f6fa;font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 5%;border-bottom:1px solid #2b3447}
+.brand{font-size:20px;font-weight:900;color:#f3ca76}
+a{color:#f3ca76;text-decoration:none}
+button{border:0;border-radius:9px;background:#e6b957;color:#101521;padding:11px 15px;font-weight:800;cursor:pointer}
+.secondary{background:#263449;color:#fff}
+.wrap{max-width:1100px;margin:auto;padding:24px 5%}
+.hero{text-align:center;padding:30px 0}
+.hero h1{color:#f3ca76;font-size:clamp(30px,6vw,54px);margin:8px 0}
+.muted{color:#a2aec2;font-size:13px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.card,.panel{background:linear-gradient(145deg,#172238,#101827);border:1px solid #334159;border-radius:16px;padding:20px}
+.card h3{color:#f3ca76}
+.card p{color:#b4bfd1;line-height:1.6}
+.panel{margin-top:22px}
+input,textarea,select{width:100%;padding:12px;background:#0a1423;border:1px solid #3b4a63;border-radius:9px;color:white;margin:7px 0 14px}
+textarea{min-height:120px}
+label{font-size:12px;color:#b5c2d5}
+.hidden{display:none!important}
+.content{white-space:pre-wrap;line-height:1.8;color:#e1e8f4}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.tag{font-size:11px;color:#f3ca76;letter-spacing:2px}
+.empty{color:#a2aec2}
+.notice{color:#f3ca76;font-size:13px}
+.lesson{cursor:pointer}
+.lesson:hover{border-color:#e6b957}
+.referral{border-color:#a47a32}
+footer{text-align:center;padding:30px;color:#78859a;font-size:12px}
+@media(max-width:600px){
+header{padding:14px 4%}
+.wrap{padding:18px 4%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">🎓 DARYN SALES ACADEMY</div>
+  <div class="actions">
+    <a href="./index.html">← SALES LEAGUE</a>
+    <button class="secondary" id="loginBtn">РОП КІРУ</button>
+    <button class="secondary hidden" id="logoutBtn">ШЫҒУ</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="tag">DARYN ONLINE • SALES DEPARTMENT</div>
+    <h1>SALES ACADEMY</h1>
+    <p class="muted">БҮГІН СТАЖЕР — ЕРТЕҢ ЧЕМПИОН</p>
+  </div>
+
+  <section class="grid" id="categories"></section>
+
+  <section class="panel referral">
+    <div class="tag">REFER A FRIEND</div>
+    <h2>🎁 ДОСЫҢДЫ ШАҚЫР — 2 000 ₸ АЛ!</h2>
+    <p class="content">Досыңды Daryn Online командасына шақыр. Досың стажировкаға қабылданып, бірінші сатылымын жасағанда саған 2 000 ₸ бонус беріледі. Әр шақырған досың үшін бонус бір рет төленеді.</p>
+    <button id="copyReferral">📋 ШАҚЫРУ МӘТІНІН КӨШІРУ</button>
+  </section>
+
+  <section class="panel hidden" id="lessonPanel">
+    <button class="secondary" id="backBtn">← БАРЛЫҚ САБАҚ</button>
+    <div class="tag" id="lessonCategory"></div>
+    <h2 id="lessonTitle"></h2>
+    <div class="content" id="lessonBody"></div>
+    <p id="lessonVideo"></p>
+  </section>
+
+  <section class="panel hidden" id="adminPanel">
+    <h2>⚙️ РОП • АКАДЕМИЯНЫ БАСҚАРУ</h2>
+    <p class="muted">Материалдарды тек РОП өзгерте алады. Жарияланған сабақтар стажерларға көрінеді.</p>
+    <p class="notice" id="adminNotice"></p>
+
+    <form id="lessonForm">
+      <input type="hidden" id="lessonId">
+
+      <label>Бөлім</label>
+      <select id="lessonSection"></select>
+
+      <label>Сабақ атауы</label>
+      <input id="titleInput" maxlength="160" required placeholder="Мысалы: Алғашқы қоңырау">
+
+      <label>Сабақ мәтіні</label>
+      <textarea id="bodyInput" required placeholder="Сабақ мазмұнын енгіз..."></textarea>
+
+      <label>Видео сілтемесі (міндетті емес, https://)</label>
+      <input id="videoInput" type="url" placeholder="https://...">
+
+      <label>
+        <input id="publishedInput" type="checkbox" style="width:auto;margin-right:8px" checked>
+        Жариялау
+      </label>
+
+      <div class="actions">
+        <button type="submit">💾 САҚТАУ</button>
+        <button type="button" class="secondary" id="clearBtn">ТАЗАЛАУ</button>
+      </div>
+    </form>
+
+    <h3>Сабақтарды басқару</h3>
+    <div id="adminLessons"></div>
+  </section>
+</main>
+
+<footer>DARYN ONLINE • SALES ACADEMY • 2026</footer>
+
 <script>
-const URL='https://bvydfvsmglnnezkodsgz.supabase.co', KEY='sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00';const db=supabase.createClient(URL,KEY);
-const sections=[['company','🏢','Компаниямен танысу','Миссия, құндылықтар және корпоративтік мәдениет'],['product','📚','Өнімді меңгеру','Курстар, артықшылықтар, ұсыныстар'],['sales','📞','Сату негіздері','Алғашқы қоңырау және қажеттілікті анықтау'],['scripts','💬','Сату скрипттері','Ата-анамен сөйлесу үлгілері'],['objections','🧠','Қарсылықтармен жұмыс','Клиенттің күмәнімен жұмыс'],['zoom','🎥','Zoom арқылы сату','Жиналысқа шақыру және жабу'],['practice','📝','Тест және практика','Тапсырмалар мен білімді тексеру']];
-const $=id=>document.getElementById(id);let isROP=false,lessons=[];const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function reset(){ $('lessonForm').reset();$('lessonId').value='';$('publishedInput').checked=true }
-function render(){let visible=lessons.filter(x=>isROP||x.published);$('categories').innerHTML=sections.map(([id,icon,name,desc])=>{let items=visible.filter(x=>x.section===id);return `<div class="card"><div style="font-size:28px">${icon}</div><h3>${name}</h3><p>${desc}</p>${items.length?items.map(x=>`<p><button class="secondary lesson" data-id="${escapeHtml(x.id)}">📖 ${escapeHtml(x.title)}</button></p>`).join(''):'<p class="empty">Сабақтар жақында қосылады</p>'}</div>`}).join('');$('adminLessons').innerHTML=isROP?lessons.map(x=>`<div class="card" style="margin:9px 0"><strong>${escapeHtml(x.title)}</strong><p class="muted">${escapeHtml(x.section)} • ${x.published?'Жарияланған':'Жоба'}</p><div class="actions"><button data-edit="${escapeHtml(x.id)}">Өңдеу</button><button class="secondary" data-delete="${escapeHtml(x.id)}">Жою</button></div></div>`).join(''):'':null}
-async function load(){const {data,error}=await db.from('academy_lessons').select('id,section,title,body,video_url,published,sort_order').order('sort_order',{ascending:true}).order('created_at',{ascending:true});if(error){$('adminNotice').textContent='Сабақтарды жүктеу қатесі: '+error.message;return}lessons=data||[];render()}
-async function checkROP(){const {data:{user}}=await db.auth.getUser();if(!user){isROP=false}else{const {data,error}=await db.from('rop_users').select('user_id').eq('user_id',user.id).maybeSingle();isROP=!!data&&!error} $('adminPanel').classList.toggle('hidden',!isROP);$('loginBtn').classList.toggle('hidden',isROP);$('logoutBtn').classList.toggle('hidden',!isROP);await load()}
-$('loginBtn').onclick=async()=>{const email=prompt('РОП email:');if(!email)return;const password=prompt('Құпиясөз:');if(!password)return;const {error}=await db.auth.signInWithPassword({email,password});if(error)return alert(error.message);await checkROP()};$('logoutBtn').onclick=async()=>{await db.auth.signOut();await checkROP()};
-$('categories').onclick=e=>{let btn=e.target.closest('[data-id]');if(!btn)return;let x=lessons.find(v=>String(v.id)===btn.dataset.id);if(!x)return;$('lessonCategory').textContent=sections.find(s=>s[0]===x.section)?.[2]||'';$('lessonTitle').textContent=x.title;$('lessonBody').textContent=x.body;$('lessonVideo').innerHTML=x.video_url?`<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(x.video_url)}">▶ ВИДЕОНЫ АШУ</a>`:'';$('lessonPanel').classList.remove('hidden');$('lessonPanel').scrollIntoView({behavior:'smooth'})};$('backBtn').onclick=()=>{$('lessonPanel').classList.add('hidden');$('categories').scrollIntoView({behavior:'smooth'})};
-$('lessonForm').onsubmit=async e=>{e.preventDefault();if(!isROP)return;const id=$('lessonId').value;const payload={section:$('lessonSection').value,title:$('titleInput').value.trim(),body:$('bodyInput').value.trim(),video_url:$('videoInput').value.trim()||null,published:$('publishedInput').checked};if(!payload.title||!payload.body)return;const result=id?await db.from('academy_lessons').update(payload).eq('id',id):await db.from('academy_lessons').insert(payload);if(result.error)return alert(result.error.message);reset();$('adminNotice').textContent='Сабақ сақталды!';await load()};
-$('adminLessons').onclick=async e=>{let edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit){let x=lessons.find(v=>String(v.id)===edit.dataset.edit);if(!x)return;$('lessonId').value=x.id;$('lessonSection').value=x.section;$('titleInput').value=x.title;$('bodyInput').value=x.body;$('videoInput').value=x.video_url||'';$('publishedInput').checked=x.published;$('adminPanel').scrollIntoView({behavior:'smooth'})}if(del&&confirm('Сабақты жоямыз ба?')){let {error}=await db.from('academy_lessons').delete().eq('id',del.dataset.delete);if(error)return alert(error.message);await load()}};$('clearBtn').onclick=reset;
-$('copyReferral').onclick=async()=>{const t='Сәлем! Daryn Online командасына стажировкаға шақырамын. Сатылымды үйреніп, тәжірибе жинауға мүмкіндік бар. Қызық болса, маған жаз!';try{await navigator.clipboard.writeText(t);alert('Мәтін көшірілді!')}catch{prompt('Мәтінді көшір:',t)}};
-$('lessonSection').innerHTML=sections.map(x=>`<option value="${x[0]}">${x[1]} ${x[2]}</option>`).join('');checkROP();
-</script></body></html>
+const URL='https://bvydfvsmglnnezkodsgz.supabase.co';
+const KEY='sb_publishable_-Df-gxVJZQdv_ptNhGZkTg_gz5cSr00';
+const db=supabase.createClient(URL,KEY);
+
+const sections=[
+ ['company','🏢','Компаниямен танысу','Миссия, құндылықтар және корпоративтік мәдениет'],
+ ['product','📚','Өнімді меңгеру','Курстар, артықшылықтар, ұсыныстар'],
+ ['sales','📞','Сату негіздері','Алғашқы қоңырау және қажеттілікті анықтау'],
+ ['scripts','💬','Сату скрипттері','Ата-анамен сөйлесу үлгілері'],
+ ['objections','🧠','Қарсылықтармен жұмыс','Клиенттің күмәнімен жұмыс'],
+ ['zoom','🎥','Zoom арқылы сату','Жиналысқа шақыру және жабу'],
+ ['practice','📝','Тест және практика','Тапсырмалар мен білімді тексеру']
+];
+
+const $=id=>document.getElementById(id);
+let isROP=false,lessons=[];
+
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({
+ '&':'&amp;',
+ '<':'&lt;',
+ '>':'&gt;',
+ '"':'&quot;',
+ "'":'&#39;'
+}[c]));
+
+function reset(){
+ $('lessonForm').reset();
+ $('lessonId').value='';
+ $('publishedInput').checked=true;
+}
+
+function render(){
+ let visible=lessons.filter(x=>isROP||x.published);
+
+ $('categories').innerHTML=sections.map(([id,icon,name,desc])=>{
+  let items=visible.filter(x=>x.section===id);
+
+  return `
+   <div class="card">
+    <div style="font-size:28px">${icon}</div>
+    <h3>${name}</h3>
+    <p>${desc}</p>
+    ${
+      items.length
+      ?items.map(x=>`
+        <p>
+         <button class="secondary lesson" data-id="${escapeHtml(x.id)}">
+          📖 ${escapeHtml(x.title)}
+         </button>
+        </p>
+       `).join('')
+      :'<p class="empty">Сабақтар жақында қосылады</p>'
+    }
+   </div>
+  `;
+ }).join('');
+
+ $('adminLessons').innerHTML=isROP
+ ?lessons.map(x=>`
+  <div class="card" style="margin:9px 0">
+   <strong>${escapeHtml(x.title)}</strong>
+   <p class="muted">
+    ${escapeHtml(x.section)} • ${x.published?'Жарияланған':'Жоба'}
+   </p>
+   <div class="actions">
+    <button data-edit="${escapeHtml(x.id)}">Өңдеу</button>
+    <button class="secondary" data-delete="${escapeHtml(x.id)}">Жою</button>
+   </div>
+  </div>
+ `).join('')
+ :'';
+}
+
+async function load(){
+ const {data,error}=await db.from('academy_lessons')
+  .select('id,section,title,body,video_url,published,sort_order')
+  .order('sort_order',{ascending:true})
+  .order('created_at',{ascending:true});
+
+ if(error){
+  $('adminNotice').textContent='Сабақтарды жүктеу қатесі: '+error.message;
+  return;
+ }
+
+ lessons=data||[];
+ render();
+}
+
+async function checkROP(){
+ const {data:{user}}=await db.auth.getUser();
+
+ if(!user){
+  isROP=false;
+ }else{
+  const {data,error}=await db.from('rop_users')
+   .select('user_id')
+   .eq('user_id',user.id)
+   .maybeSingle();
+
+  isROP=!!data&&!error;
+ }
+
+ $('adminPanel').classList.toggle('hidden',!isROP);
+ $('loginBtn').classList.toggle('hidden',isROP);
+ $('logoutBtn').classList.toggle('hidden',!isROP);
+
+ await load();
+}
+
+$('loginBtn').onclick=async()=>{
+ const email=prompt('РОП email:');
+ if(!email)return;
+
+ const password=prompt('Құпиясөз:');
+ if(!password)return;
+
+ const {error}=await db.auth.signInWithPassword({email,password});
+
+ if(error){
+  return alert(error.message);
+ }
+
+ await checkROP();
+};
+
+$('logoutBtn').onclick=async()=>{
+ await db.auth.signOut();
+ await checkROP();
+};
+
+$('categories').onclick=e=>{
+ let btn=e.target.closest('[data-id]');
+ if(!btn)return;
+
+ let x=lessons.find(v=>String(v.id)===btn.dataset.id);
+ if(!x)return;
+
+ $('lessonCategory').textContent=
+  sections.find(s=>s[0]===x.section)?.[2]||'';
+
+ $('lessonTitle').textContent=x.title;
+ $('lessonBody').textContent=x.body;
+
+ $('lessonVideo').innerHTML=x.video_url
+  ?`<a target="_blank" rel="noopener noreferrer" href="${escapeHtml(x.video_url)}">▶ ВИДЕОНЫ АШУ</a>`
+  :'';
+
+ $('lessonPanel').classList.remove('hidden');
+ $('lessonPanel').scrollIntoView({behavior:'smooth'});
+};
+
+$('backBtn').onclick=()=>{
+ $('lessonPanel').classList.add('hidden');
+ $('categories').scrollIntoView({behavior:'smooth'});
+};
+
+$('lessonForm').onsubmit=async e=>{
+ e.preventDefault();
+ if(!isROP)return;
+
+ const id=$('lessonId').value;
+
+ const payload={
+  section:$('lessonSection').value,
+  title:$('titleInput').value.trim(),
+  body:$('bodyInput').value.trim(),
+  video_url:$('videoInput').value.trim()||null,
+  published:$('publishedInput').checked
+ };
+
+ if(!payload.title||!payload.body)return;
+
+ const result=id
+  ?await db.from('academy_lessons').update(payload).eq('id',id)
+  :await db.from('academy_lessons').insert(payload);
+
+ if(result.error){
+  return alert(result.error.message);
+ }
+
+ reset();
+ $('adminNotice').textContent='Сабақ сақталды!';
+ await load();
+};
+
+$('adminLessons').onclick=async e=>{
+ let edit=e.target.closest('[data-edit]');
+ let del=e.target.closest('[data-delete]');
+
+ if(edit){
+  let x=lessons.find(v=>String(v.id)===edit.dataset.edit);
+  if(!x)return;
+
+  $('lessonId').value=x.id;
+  $('lessonSection').value=x.section;
+  $('titleInput').value=x.title;
+  $('bodyInput').value=x.body;
+  $('videoInput').value=x.video_url||'';
+  $('publishedInput').checked=x.published;
+
+  $('adminPanel').scrollIntoView({behavior:'smooth'});
+ }
+
+ if(del&&confirm('Сабақты жоямыз ба?')){
+  let {error}=await db.from('academy_lessons')
+   .delete()
+   .eq('id',del.dataset.delete);
+
+  if(error)return alert(error.message);
+  await load();
+ }
+};
+
+$('clearBtn').onclick=reset;
+
+$('copyReferral').onclick=async()=>{
+ const t='Сәлем! Daryn Online командасына стажировкаға шақырамын. Сатылымды үйреніп, тәжірибе жинауға мүмкіндік бар. Қызық болса, маған жаз!';
+
+ try{
+  await navigator.clipboard.writeText(t);
+  alert('Мәтін көшірілді!');
+ }catch{
+  prompt('Мәтінді көшір:',t);
+ }
+};
+
+$('lessonSection').innerHTML=sections.map(x=>`
+ <option value="${x[0]}">${x[1]} ${x[2]}</option>
+`).join('');
+
+checkROP();
+</script>
+</body>
+</html>
