@@ -88,7 +88,7 @@ header{
 }
 
 .container{
-  max-width:1250px;
+  max-width:1450px;
   margin:auto;
   padding:35px 5% 65px;
 }
@@ -136,13 +136,15 @@ header{
 
 .legends-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:28px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
 }
 
 .legend-card{
   position:relative;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
   border-radius:23px;
   border:1px solid #816536;
   background:linear-gradient(
@@ -161,7 +163,7 @@ header{
 
 .legend-photo{
   position:relative;
-  height:480px;
+  height:440px;
   overflow:hidden;
   background:linear-gradient(
     145deg,
@@ -181,6 +183,10 @@ header{
 
 .legend-card:hover .legend-photo img{
   transform:scale(1.04);
+}
+
+.nurzhan-photo img{
+  object-position:center 65%;
 }
 
 .photo-gradient{
@@ -205,17 +211,20 @@ header{
   border-radius:30px;
   font-weight:900;
   letter-spacing:1px;
-  font-size:12px;
+  font-size:11px;
 }
 
 .legend-content{
-  padding:25px 30px 32px;
+  padding:25px 22px 32px;
   text-align:center;
+  display:flex;
+  flex-direction:column;
+  flex:1;
 }
 
 .legend-name{
   margin:0;
-  font-size:clamp(29px,4vw,41px);
+  font-size:clamp(29px,3vw,41px);
   font-weight:900;
   letter-spacing:2px;
 }
@@ -223,35 +232,39 @@ header{
 .legend-role{
   margin:12px 0;
   color:#a9b7ca;
-  font-size:12px;
+  font-size:11px;
   letter-spacing:2px;
 }
 
 .record-value{
   margin:20px 0 8px;
   color:var(--gold-light);
-  font-size:clamp(35px,5vw,53px);
+  font-size:clamp(29px,3.2vw,49px);
   font-weight:900;
   text-shadow:0 0 25px #e9b74725;
+  white-space:nowrap;
 }
 
 .record-description{
   color:#aebbd0;
   font-size:13px;
+  line-height:1.6;
 }
 
 .quote{
   margin:27px 0;
-  padding:22px;
+  padding:22px 12px;
   border-top:1px solid #3e4a5c;
   border-bottom:1px solid #3e4a5c;
   color:#e5e9f1;
   font-size:15px;
   line-height:1.9;
   font-style:italic;
+  flex:1;
 }
 
 .bonus-box{
+  margin-top:auto;
   padding:23px 15px;
   border-radius:15px;
   background:linear-gradient(
@@ -273,7 +286,7 @@ header{
 .bonus-amount{
   margin:10px 0;
   color:#ffe49a;
-  font-size:clamp(30px,4vw,43px);
+  font-size:clamp(30px,3vw,43px);
   font-weight:900;
 }
 
@@ -345,7 +358,17 @@ footer{
   letter-spacing:1px;
 }
 
-@media(max-width:800px){
+@media(max-width:1000px){
+  .legends-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .legend-photo{
+    height:440px;
+  }
+}
+
+@media(max-width:700px){
   .legends-grid{
     grid-template-columns:1fr;
     max-width:550px;
@@ -560,6 +583,67 @@ footer{
       </div>
     </article>
 
+    <!-- НҰРЖАН -->
+
+    <article class="legend-card">
+
+      <div class="legend-photo nurzhan-photo">
+        <img
+          src="./nurzhan.jpg"
+          alt="Нұржанның фотосы"
+          onerror="this.onerror=null;this.src='./logo.png';this.style.objectFit='contain';this.style.padding='90px'"
+        >
+
+        <div class="photo-gradient"></div>
+
+        <div class="record-badge">
+          🚀 АЛҒАШҚЫ АЙ РЕКОРДЫ
+        </div>
+      </div>
+
+      <div class="legend-content">
+
+        <h2 class="legend-name">НҰРЖАН</h2>
+
+        <div class="legend-role">
+          DARYN SALES • ROOKIE CHAMPION
+        </div>
+
+        <div class="record-value">
+          3 500 000 ₸
+        </div>
+
+        <div class="record-description">
+          Алғашқы жұмыс айындағы сатылым рекорды
+        </div>
+
+        <div class="quote">
+          Үлкен нәтиже көрсету үшін
+          жылдар бойы тәжірибе жинау міндетті емес.
+          Алғашқы айыңнан бастап-ақ
+          өз атыңды тарихқа жаза аласың!
+        </div>
+
+        <div class="bonus-box">
+
+          <div class="bonus-label">
+            🚀 РЕКОРДТЫ ЖАҢАРТ
+          </div>
+
+          <div class="bonus-amount">
+            +20 000 ₸
+          </div>
+
+          <div class="bonus-description">
+            Алғашқы жұмыс айында 3 500 000 ₸-ден
+            көп сатылым жасаған менеджерге бонус!
+          </div>
+
+        </div>
+
+      </div>
+    </article>
+
   </section>
 
   <section class="motivation">
@@ -567,7 +651,7 @@ footer{
     <h2>👑 КЕЛЕСІ АҢЫЗ — СЕН!</h2>
 
     <p>
-      Бүгін бұл тақтада Альтайр мен Ерасыл тұр.
+      Бүгін бұл тақтада Альтайр, Ерасыл және Нұржан тұр.
       Ертең олардың орнында <strong>сенің атың</strong>
       тұруы мүмкін.
       <strong>Рекордты жаңарт. Бонусты ал.
